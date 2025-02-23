@@ -1,0 +1,7 @@
+/bin/
+*.jar
+*.war
+*.ear
+lib/
+
+*.class
