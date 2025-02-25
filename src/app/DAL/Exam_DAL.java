@@ -14,7 +14,7 @@ import app.database.ConnectDatabase;
 
 
 public class Exam_DAL {
-    ConnectDatabase db;
+    static ConnectDatabase db;
     
     public List<Exam_DTO> getAllExam() throws SQLException {
     	List<Exam_DTO> result = new ArrayList<Exam_DTO>();
@@ -147,4 +147,7 @@ public class Exam_DAL {
         pst.close();
         return correctAnswer;
     }
+    
+    
+    
 }

@@ -12,6 +12,7 @@ import app.GUI.Component.AdminUI.QuestionsPanel;
 import app.GUI.Component.AdminUI.TopicPanel;
 import app.GUI.Sidebar.SideMenu;
 import java.awt.Color;
+import java.sql.SQLException;
 
 public class AdminManageScreen extends JFrame {
 
@@ -31,13 +32,14 @@ public class AdminManageScreen extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
 	 */
-	public AdminManageScreen(User_DTO currentAdmin) {
+	public AdminManageScreen(User_DTO currentAdmin) throws SQLException {
 		getContentPane().setBackground(Color.WHITE);
 		initCompponents(currentAdmin);
 	}
 
-	private void initCompponents(User_DTO currentAdmin) {
+	private void initCompponents(User_DTO currentAdmin) throws SQLException {
 		// TODO Auto-generated method stub
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		

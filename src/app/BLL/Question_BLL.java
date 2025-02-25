@@ -12,6 +12,13 @@ public class Question_BLL {
 		questionList = q_DAL.selectAll();
 		return questionList;
 	}
+	public int getIndexById(int id) {
+        for(int i=0; i<this.questionList.size(); i++) {
+            if(this.questionList.get(i).getqID() == id)
+                return i;
+        }
+        return -1;
+    }
 	
 	public ArrayList<Question_DTO> search(String text, String type) {
         ArrayList<Question_DTO> result = new ArrayList<Question_DTO>();
@@ -66,4 +73,19 @@ public class Question_BLL {
         }
         return false;
     }
+	
+	public boolean add(Question_DTO q) {
+        if (q_DAL.insert(q) != 0) {
+        	questionList.add(q);
+            return true;
+        }
+        return false;
+    }
+	public boolean edit(Question_DTO q) {
+		if (q_DAL.update(q) != 0) {
+        	questionList.set(getIndexById(q.getqID()), q);
+            return true;
+        }
+        return false;
+	}
 }

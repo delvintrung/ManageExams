@@ -17,6 +17,15 @@ public class Question_DTO {
 			this.qStatus = 0;
 		}
 	 
+	 public Question_DTO(String qContent, String qPicture, int qTopicID, String qLevel, int qStatus) {
+			super();
+			this.qContent = qContent;
+			this.qPicture = qPicture;
+			this.qTopicID = qTopicID;
+			this.qLevel = qLevel;
+			this.qStatus = qStatus;
+		}
+	 
 	public Question_DTO(int qID, String qContent, String qPicture, int qTopicID, String qLevel, int qStatus) {
 		super();
 		this.qID = qID;
