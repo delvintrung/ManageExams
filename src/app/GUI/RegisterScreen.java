@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import app.Main;
+import app.BLL.User_BLL;
 import app.DTO.User_DTO;
 import app.Helper.Validator;
 
@@ -31,10 +32,10 @@ public class RegisterScreen extends javax.swing.JDialog {
 	private JTextField fullnameTxt;
 	private JTextField usernameTxt;
 	private JPasswordField passwordTxt;
-	JButton btnNewButton;
-	Validator validate = new Validator();
-	User_DTO newUser;
+	private JButton btnNewButton;
 	
+	private User_BLL userBLL = new User_BLL();
+		
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(1000,600);
@@ -143,7 +144,8 @@ public class RegisterScreen extends javax.swing.JDialog {
 		String fullname = fullnameTxt.getText();
 		String username = usernameTxt.getText();
 		String password = passwordTxt.getText();
-        if(Validator.isEmpty(email) || Validator.isEmail(email)) {
+		
+        if(Validator.isEmpty(email) || !Validator.isEmail(email)) {
             JOptionPane.showMessageDialog(this, "Email không được bỏ trống hoặc sai định dạng");
             return;
         }
@@ -160,12 +162,13 @@ public class RegisterScreen extends javax.swing.JDialog {
             return;
         }
         
-        newUser = new User_DTO(username,email, password, fullname,0);
-        if(newUser != null) {
+        User_DTO newUser = new User_DTO(username, email, password, fullname, 0);
+        
+        if (userBLL.create(newUser)) {
+        	JOptionPane.showMessageDialog(this, "Đăng ký thành công");
         	new LoginScreen().setVisible(true);
         } else {
-        	
-        	System.out.println("Tao tai khoan moi that bai");
+        	JOptionPane.showMessageDialog(this, "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin!");
         }
         
         

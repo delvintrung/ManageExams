@@ -5,11 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import app.DAL.User_DAL;
 import app.DTO.User_DTO;
 import app.database.ConnectDatabase;
 
 public class User_BLL {
-	User_DTO  userDTO = new User_DTO(); 
+	public User_DAL userDAL = new User_DAL();
+	public User_DTO userDTO = new User_DTO(); 
+	public ArrayList<User_DTO> users = new ArrayList<User_DTO>();
+	
 	public static User_DTO getInstance() {
         return new User_DTO();
     }
@@ -39,7 +43,14 @@ public class User_BLL {
         return result;
     }
     
-    
+    public boolean create(User_DTO user) {    	
+        if (userDAL.create(user) != 0) {
+        	users.add(user);
+            return true;
+        }
+        
+        return false;
+    }
     
 //    public NhanVienDTO selectByAccountId(String t) {
 //        NhanVienDTO nv = null;

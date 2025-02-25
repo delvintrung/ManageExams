@@ -35,6 +35,7 @@ public class Main extends JFrame {
 	private JPasswordField passwordTxt;
 	private Exam_BLL exam_BLL;
 	private JButton btnGoToExam;
+	
 	public Main () {}
 
     public Main(User_DTO currentUser) throws SQLException {
