@@ -21,7 +21,7 @@ import app.BLL.Question_BLL;
 import app.DTO.Question_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
-import app.GUI.Component.Dialog.AddRemoveQuestionDialog;
+import app.GUI.Component.Dialog.AddEitQuestionDialog;
 
 import java.awt.Font;
 import javax.swing.JTable;
@@ -179,7 +179,7 @@ public class QuestionsPanel extends JPanel implements ActionListener  {
         
         
         if(e.getSource() == addQues) {
-            AddRemoveQuestionDialog addSpDialog = new AddRemoveQuestionDialog(main, true, "Thêm câu hỏi", this, "add", null);
+            AddEitQuestionDialog addSpDialog = new AddEitQuestionDialog(main, true, "Thêm câu hỏi", this, "add", null);
             addSpDialog.setVisible(true);
             allQuestion = q_BLL.getAllQuestion();
             q_BLL = new Question_BLL();
@@ -200,7 +200,7 @@ public class QuestionsPanel extends JPanel implements ActionListener  {
         if(e.getSource() == editQues) {
             int index = getSelectedRow();
             if(index != -1) {
-                AddRemoveQuestionDialog editSpDialog = new AddRemoveQuestionDialog(main, true, "Thêm sản phẩm", this, "edit", allQuestion.get(index));
+                AddEitQuestionDialog editSpDialog = new AddEitQuestionDialog(main, true, "Thêm sản phẩm", this, "edit", allQuestion.get(index));
                 editSpDialog.setVisible(true);
                 allQuestion = q_BLL.getAllQuestion();
                 loadDataToTable(allQuestion);

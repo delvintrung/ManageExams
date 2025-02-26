@@ -31,4 +31,24 @@ public class Topic_DAL {
 	        }
 	        return null;
 	    }
+	    
+	    
+	    public List<Topic_DTO> getChildTopic() throws SQLException {
+	    	List<Topic_DTO> result = new ArrayList<Topic_DTO>();
+	    	db = new ConnectDatabase();
+	        Connection conn = db.connectToDB();
+	        String query = "SELECT * FROM topics where tpParent > 0";
+	        ResultSet rs = conn.createStatement().executeQuery(query);
+	        while (rs.next()) {
+	            int tpID = rs.getInt("tpID");
+	            String tpTitle = rs.getString("tpTitle");
+	            int tpParent = rs.getInt("tpParent");
+	            int tpStatus = rs.getInt("tpStatus");
+	            result.add(new Topic_DTO(tpID,tpTitle,tpParent,tpStatus));
+	        }
+	        if(result.size() > 0 ) {
+	        	return result;
+	        }
+	        return null;
+	    }
 }

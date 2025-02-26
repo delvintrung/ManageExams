@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import app.DTO.Question_DTO;
+import app.DTO.Topic_DTO;
+import app.Helper.ComboItem;
 import app.database.ConnectDatabase;
 
 public class Question_DAL {
@@ -198,6 +200,9 @@ public class Question_DAL {
 
 	    return questionIds;
 	}
+	
+	
+	
 
 
 }

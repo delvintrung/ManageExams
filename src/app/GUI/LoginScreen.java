@@ -70,11 +70,13 @@ public class LoginScreen extends JFrame {
         if(account != null && account.getIsAdmin() == 1) {
         	AdminManageScreen adminManageScreen = new AdminManageScreen(account);
         	adminManageScreen.setVisible(true);
+        	dispose();
         	return;
         }
         else {
         	main = new Main(account);
         	main.setVisible(true);
+        	dispose();
         	System.out.println("Dang nhap thanh cong");
         }
 	} 
