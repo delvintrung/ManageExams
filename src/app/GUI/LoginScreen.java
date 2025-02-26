@@ -13,6 +13,8 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 public class LoginScreen extends JFrame {
 	/**
 	 * 
@@ -53,27 +55,27 @@ public class LoginScreen extends JFrame {
 		// TODO Auto-generated method stub
 		String username = textField.getText();
 		String password = passwordField.getText();
-		System.out.println(loginDAL);
         User_DTO account = loginDAL.selectByUserName(username);
-        if(textField.getText().equals("")) {
+        
+        if(username.equals("")) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng");
             return;
         }
-        if(passwordField.getText().equals("")) {
+        if(password.equals("")) {
             JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng");
             return;
         }
-        if(!account.getUserPassword().equals(password)) {
+        if(!BCrypt.checkpw(password, account.getUserPassword())) {
             JOptionPane.showMessageDialog(this, "Sai mật khẩu");
             return;
         }
+        
         if(account != null && account.getIsAdmin() == 1) {
         	AdminManageScreen adminManageScreen = new AdminManageScreen(account);
         	adminManageScreen.setVisible(true);
         	dispose();
         	return;
-        }
-        else {
+        } else {
         	main = new Main(account);
         	main.setVisible(true);
         	dispose();

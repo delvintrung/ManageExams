@@ -176,8 +176,6 @@ public class QuestionsPanel extends JPanel implements ActionListener  {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        
-        
         if(e.getSource() == addQues) {
             AddEitQuestionDialog addSpDialog = new AddEitQuestionDialog(main, true, "Thêm câu hỏi", this, "add", null);
             addSpDialog.setVisible(true);

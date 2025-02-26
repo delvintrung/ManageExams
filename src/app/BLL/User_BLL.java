@@ -5,14 +5,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import app.DAL.User_DAL;
 import app.DTO.User_DTO;
 import app.database.ConnectDatabase;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class User_BLL {
-	User_DTO  userDTO = new User_DTO(); 
+	public User_DAL userDAL = new User_DAL();
+	public User_DTO userDTO = new User_DTO(); 
+	public ArrayList<User_DTO> users = new ArrayList<User_DTO>();
+	
 	public static User_DTO getInstance() {
         return new User_DTO();
     }
+	
+	private String hashPassword(String password) {
+		return BCrypt.hashpw(password, BCrypt.gensalt(12));
+	}
     
     public ArrayList<User_DTO> selectAll() {
         ArrayList<User_DTO> result = new ArrayList<User_DTO>();
@@ -39,7 +48,19 @@ public class User_BLL {
         return result;
     }
     
-    
+    public boolean create(User_DTO user) {    	
+    	if (!user.getUserPassword().equals("")) {
+    		String hashedPassword = hashPassword(user.getUserPassword());
+    		user.setUserPassword(hashedPassword);
+    	}
+    	
+        if (userDAL.create(user) != 0) {
+        	users.add(user);
+            return true;
+        }
+        
+        return false;
+    }
     
 //    public NhanVienDTO selectByAccountId(String t) {
 //        NhanVienDTO nv = null;
