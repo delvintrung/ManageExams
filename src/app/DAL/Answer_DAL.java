@@ -3,6 +3,7 @@ package app.DAL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,5 +31,45 @@ public class Answer_DAL {
         }
 		return null;
 		
+	}
+	
+	public int insertAnswerText(int qID, String content, int isRight) {
+		ConnectDatabase db = new ConnectDatabase(); 
+		int result = 0;
+        Connection conn;
+		try {
+			conn = (Connection) db.connectToDB();
+			 String query = "insert into answers(qID, awContent, isRight) value (?, ?, ?)";
+		        PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
+		        pst.setInt(1, qID);
+		        pst.setString(2, content);
+		        pst.setInt(3, isRight);
+		        result = pst.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+       
+	}
+	
+	public int insertAnswerImage(int qID, String content, int isRight) {
+		ConnectDatabase db = new ConnectDatabase(); 
+		int result = 0;
+        Connection conn;
+		try {
+			conn = (Connection) db.connectToDB();
+			 String query = "insert into answers(qID, awPictures, isRight) value (?, ?, ?)";
+		        PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
+		        pst.setInt(1, qID);
+		        pst.setString(2, content);
+		        pst.setInt(3, isRight);
+		        result = pst.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+       
 	}
 }

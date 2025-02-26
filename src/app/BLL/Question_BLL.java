@@ -1,13 +1,11 @@
 package app.BLL;
 
-import java.sql.SQLException;
+
 import java.util.ArrayList;
-import java.util.List;
+
 
 import app.DAL.Question_DAL;
 import app.DTO.Question_DTO;
-import app.DTO.Topic_DTO;
-import app.Helper.ComboItem;
 
 public class Question_BLL {
 	public Question_DAL q_DAL = new Question_DAL();
@@ -23,6 +21,12 @@ public class Question_BLL {
         }
         return -1;
     }
+	
+	public int getAutoIncrement() {
+		int result = 0;
+		result = q_DAL.getAutoIncrement();
+		return result;
+	}
 	
 	public ArrayList<Question_DTO> search(String text, String type) {
         ArrayList<Question_DTO> result = new ArrayList<Question_DTO>();

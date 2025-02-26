@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +26,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 
+import app.BLL.Answer_BLL;
 import app.BLL.Question_BLL;
 import app.BLL.Topic_BLL;
 import app.DTO.Question_DTO;
@@ -64,6 +66,7 @@ public class AddEitQuestionDialog extends JDialog {
 	Question_DTO qEdit;
 	private Question_BLL qBll = new Question_BLL();
 	private Topic_BLL tBLL = new Topic_BLL();
+	private Answer_BLL aBll = new Answer_BLL();
 	private JTextField txtQues;
 	private JTextField txtLink;
 	JComboBox cbbLevel;
@@ -90,6 +93,7 @@ public class AddEitQuestionDialog extends JDialog {
 	 private List<ButtonGroup> buttonGroupList = new ArrayList<>();
 	 ButtonGroup typeAnswers;
 	 JPanel answerImagePanel;
+	 JButton btnAdd;
 
 	public AddEitQuestionDialog(java.awt.Frame parent, boolean modal, String title, QuestionsPanel panelQuestion, String mode, Question_DTO spEdit) {
         super(parent, modal);
@@ -113,6 +117,15 @@ public class AddEitQuestionDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				openInsertAnswerPanel(answerTextPanel);
+			}
+		});
+        
+        btnAdd.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				handleInsertTextType();
 			}
 		});
     }
@@ -169,7 +182,7 @@ public class AddEitQuestionDialog extends JDialog {
         
         btnAccept = new JButton("Xác nhận");
         btnAccept.setBackground(Color.CYAN);
-        btnAccept.setBounds(283, 327, 117, 21);
+        btnAccept.setBounds(284, 318, 117, 21);
         getContentPane().add(btnAccept);
         
         JButton uploadImage = new JButton("Upload");
@@ -199,7 +212,7 @@ public class AddEitQuestionDialog extends JDialog {
         
         answerPanel = new JPanel();
         answerPanel.setBackground(Color.WHITE);
-        answerPanel.setBounds(34, 371, 630, 182);
+        answerPanel.setBounds(32, 348, 630, 182);
         getContentPane().add(answerPanel);
         answerPanel.setLayout(null);
         
@@ -260,6 +273,12 @@ public class AddEitQuestionDialog extends JDialog {
         answerImagePanel.setBounds(318, 49, 302, 123);
         answerPanel.add(answerImagePanel);
         answerImagePanel.setLayout(new GridLayout(5, 1, 10, 0));
+        
+        btnAdd = new JButton("Thêm");
+        btnAdd.setFont(new Font("Verdana", Font.PLAIN, 10));
+        btnAdd.setBackground(Color.WHITE);
+        btnAdd.setBounds(284, 532, 117, 21);
+        getContentPane().add(btnAdd);
         
         
 		
@@ -486,4 +505,48 @@ public class AddEitQuestionDialog extends JDialog {
 	        parent.revalidate(); 
 	        parent.repaint();
 	}
+	public List<String> getAnswers() {
+        List<String> answers = new ArrayList<>();
+        for (JTextField textField : textFieldList) {
+            answers.add(textField.getText());
+        }
+        return answers;
+    }
+
+    
+    public List<Boolean> getCorrectAnswers() {
+        List<Boolean> correctAnswers = new ArrayList<>();
+        for (ButtonGroup group : buttonGroupList) {
+            for (AbstractButton button : Collections.list(group.getElements())) {
+                if (button.isSelected()) {
+                    correctAnswers.add(button.getText().equals("Đúng"));
+                    break;
+                }
+            }
+        }
+        return correctAnswers;
+        
+    }
+    
+    
+    public void handleInsertTextType() {
+    	String question = txtQues.getText();
+    	String urlImage = txtLink.getText();
+    	String level = (String) cbbLevel.getSelectedItem();
+    	ComboItem topicSelected = (ComboItem) cbbTopic.getSelectedItem();
+    	int topic = topicSelected.getKey();
+    	
+    	
+    	int newIdQuestion = qBll.getAutoIncrement();
+    	List<String> answers = getAnswers();
+    	List<Boolean> correctAnswers = getCorrectAnswers();
+    	
+    	Question_DTO newQuestion = new Question_DTO(question,urlImage,topic,level,1); 
+    	qBll.add(newQuestion);
+    	int size = answers.size();
+    	for(int i=0; i < size; i++ ) {
+    		aBll.insertRowText(newIdQuestion, answers.get(i), correctAnswers.get(i) ? 1 : 0  );
+    	}
+    	System.out.println(question+ "\n" + level + "\n" + answers + "\n" + correctAnswers);
+    }
 }
