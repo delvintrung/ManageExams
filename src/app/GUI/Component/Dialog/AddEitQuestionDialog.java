@@ -311,6 +311,7 @@ public class AddEitQuestionDialog extends JDialog {
         } catch (IOException e) {
         }
         return newName;
+        
     }
 	
 	public void addQuestionsEvent() {
@@ -537,16 +538,23 @@ public class AddEitQuestionDialog extends JDialog {
     	int topic = topicSelected.getKey();
     	
     	
-    	int newIdQuestion = qBll.getAutoIncrement();
+    	
     	List<String> answers = getAnswers();
     	List<Boolean> correctAnswers = getCorrectAnswers();
     	
     	Question_DTO newQuestion = new Question_DTO(question,urlImage,topic,level,1); 
     	qBll.add(newQuestion);
+    	int newIdQuestion = qBll.getAutoIncrement();
     	int size = answers.size();
+    	boolean result = false;
     	for(int i=0; i < size; i++ ) {
-    		aBll.insertRowText(newIdQuestion, answers.get(i), correctAnswers.get(i) ? 1 : 0  );
+    		result =  aBll.insertRowText(newIdQuestion, answers.get(i), correctAnswers.get(i) ? 1 : 0  );
+    		if(!result) {
+    			JOptionPane.showMessageDialog(this, "Thêm đáp án thất bại");
+    			return;
+    		} 
     	}
-    	System.out.println(question+ "\n" + level + "\n" + answers + "\n" + correctAnswers);
+    	JOptionPane.showMessageDialog(this, "Thêm câu hỏi thành công");
+    	 dispose();
     }
 }

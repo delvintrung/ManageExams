@@ -10,7 +10,6 @@ import app.DTO.Question_DTO;
 import app.DTO.Topic_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
-import app.GUI.Component.Dialog.AddRemoveQuestionDialog;
 import app.GUI.Component.Dialog.TopicCRUDDialog;
 
 import javax.swing.JLabel;

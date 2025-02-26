@@ -47,14 +47,17 @@ public class Question_DAL {
         try {
         	ConnectDatabase db = new ConnectDatabase();
             Connection con = (Connection) db.connectToDB();
-            String sql = "SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'manageexams' AND TABLE_NAME = 'questions'";
+            String sql = "SELECT qID\r\n"
+            		+ "FROM questions\r\n"
+            		+ "ORDER BY qID DESC\r\n"
+            		+ "LIMIT 1;";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery(sql);
             if (!rs.isBeforeFirst()) {
                 System.out.println("No data");
             } else {
                 while (rs.next()) {
-                    result = rs.getInt("AUTO_INCREMENT");
+                    result = rs.getInt("qID");
                 }
             }
         } catch (SQLException ex) {

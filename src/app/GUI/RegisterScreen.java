@@ -144,6 +144,7 @@ public class RegisterScreen extends javax.swing.JDialog {
 		String fullname = fullnameTxt.getText();
 		String username = usernameTxt.getText();
 		String password = passwordTxt.getText();
+		System.out.println(Validator.isEmpty(email) + "|" + !Validator.isEmail(email));
 		
         if(Validator.isEmpty(email) || !Validator.isEmail(email)) {
             JOptionPane.showMessageDialog(this, "Email không được bỏ trống hoặc sai định dạng");
