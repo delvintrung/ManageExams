@@ -28,6 +28,7 @@ public class User_DAL {
             pst.setString(3, user.getUserPassword());
             pst.setString(4, user.getUserFullName());
             pst.setInt(5, user.getIsAdmin());
+            
             result = pst.executeUpdate();
             db.closeConnect();
         } catch (SQLException ex) {

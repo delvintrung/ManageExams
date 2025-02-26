@@ -52,8 +52,10 @@ public class Topic_DTO {
 	public void setTpStatus(int tpStatus) {
 		this.tpStatus = tpStatus;
 	}
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+	    return this.getTpTitle();
+	}
+
 }
