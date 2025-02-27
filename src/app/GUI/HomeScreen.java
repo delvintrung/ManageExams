@@ -23,19 +23,14 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 
 public class HomeScreen extends JFrame {
-
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-
-	/**
-	 * Create the frame.
-	 */
-
 	private JTable table;
 	private JTextField fullnametxt;
 	private JTextField emailtxt;
 	private JTextField usernametxt;
 	private JPasswordField passwordtxt;
+	
 	public HomeScreen() {
 		this.setTitle("ManageExams - Xin chào, ");
         this.setSize(new Dimension(1000, 600));
@@ -99,7 +94,7 @@ public class HomeScreen extends JFrame {
 		panel_1.add(lblNewLabel_1);
 		
 		JButton btnNewButton_2 = new JButton("Lưu thay đổi");
-		btnNewButton_2.setBounds(70, 274, 118, 21);
+		btnNewButton_2.setBounds(146, 205, 118, 21);
 		panel_1.add(btnNewButton_2);
 		
 		JPanel panel_2 = new JPanel();
@@ -113,8 +108,8 @@ public class HomeScreen extends JFrame {
 		lblNewLabel_2.setBounds(37, 10, 183, 13);
 		panel_2.add(lblNewLabel_2);
 		
-		JButton btnNewButton_1 = new JButton("Xem lịch sử");
-		btnNewButton_1.setBounds(66, 211, 115, 27);
+		JButton btnNewButton_1 = new JButton("Xem tất cả");
+		btnNewButton_1.setBounds(66, 211, 134, 27);
 		panel_2.add(btnNewButton_1);
 		btnNewButton_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnNewButton, btnNewButton_1}));
@@ -122,13 +117,13 @@ public class HomeScreen extends JFrame {
 		JLabel lblNewLabel_3 = new JLabel("Họ tên");
 		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 14));
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3.setBounds(20, 58, 75, 21);
+		lblNewLabel_3.setBounds(20, 58, 75, 26);
 		panel_1.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_3_1 = new JLabel("Email");
 		lblNewLabel_3_1.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel_3_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_3_1.setBounds(20, 94, 75, 21);
+		lblNewLabel_3_1.setBounds(20, 89, 75, 26);
 		panel_1.add(lblNewLabel_3_1);
 		
 		fullnametxt = new JTextField();
@@ -144,16 +139,18 @@ public class HomeScreen extends JFrame {
 		JLabel lblNewLabel_3_1_1 = new JLabel("Tên đăng nhập");
 		lblNewLabel_3_1_1.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel_3_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_3_1_1.setBounds(20, 134, 75, 21);
+		lblNewLabel_3_1_1.setBounds(20, 125, 75, 26);
 		panel_1.add(lblNewLabel_3_1_1);
 		
 		JLabel lblNewLabel_3_1_1_1 = new JLabel("Mật khẩu");
 		lblNewLabel_3_1_1_1.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel_3_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_3_1_1_1.setBounds(20, 173, 75, 21);
+		lblNewLabel_3_1_1_1.setBounds(20, 167, 75, 28);
 		panel_1.add(lblNewLabel_3_1_1_1);
 		
 		usernametxt = new JTextField();
+		usernametxt.setEditable(false);
+		usernametxt.setEnabled(false);
 		usernametxt.setColumns(10);
 		usernametxt.setBounds(92, 125, 172, 26);
 		panel_1.add(usernametxt);

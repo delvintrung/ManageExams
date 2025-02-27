@@ -128,7 +128,7 @@ public class Topic_DAL {
 			  ConnectDatabase db = new ConnectDatabase();
 			  Connection conn = db.connectToDB();
 			  
-			  String sql = "UPDATE `topics` SET `tpStatus`= 0 WHERE tpID = ?";
+			  String sql = "UPDATE `topics` SET `tpStatus`=0 WHERE `tpID`=?";
 			  
 			  PreparedStatement pst = (PreparedStatement) conn.prepareStatement(sql);
 			  pst.setInt(1, id);

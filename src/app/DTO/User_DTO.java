@@ -1,6 +1,14 @@
 package app.DTO;
 
 public class User_DTO {
+	private int userID;
+	private String userName;
+	private String userEmail;
+	private String userPassword;
+	private String userFullName;
+	private int isAdmin;
+	private int uStatus;
+	
 	public int getUserID() {
 		return userID;
 	}
@@ -9,14 +17,6 @@ public class User_DTO {
 		this.userID = userID;
 	}
 
-	int userID;
-	String userName;
-	String userEmail;
-	String userPassword;
-	String userFullName;
-	
-	
-	
 	public String getUserName() {
 		return userName;
 	}
@@ -57,8 +57,14 @@ public class User_DTO {
 		this.isAdmin = isAdmin;
 	}
 
-	int isAdmin;
-	
+	public int getuStatus() {
+		return uStatus;
+	}
+
+	public void setuStatus(int uStatus) {
+		this.uStatus = uStatus;
+	}
+
 	public User_DTO() {
 		super();
 		this.userID = 0;
@@ -67,6 +73,7 @@ public class User_DTO {
 		this.userPassword = "";
 		this.userFullName = "";
 		this.isAdmin = 0;
+		this.uStatus = 1;
 	}
 
 	public User_DTO(int userID, String userName, String userEmail, String userPassword, String userFullName, int isAdmin) {
@@ -79,7 +86,7 @@ public class User_DTO {
 		this.isAdmin = isAdmin;
 	}
 	
-	public User_DTO( String userName, String userEmail, String userPassword, String userFullName, int isAdmin) {
+	public User_DTO(String userName, String userEmail, String userPassword, String userFullName, int isAdmin) {
 		super();
 		this.userName = userName;
 		this.userEmail = userEmail;
@@ -87,6 +94,4 @@ public class User_DTO {
 		this.userFullName = userFullName;
 		this.isAdmin = isAdmin;
 	}
-	
-	
 }

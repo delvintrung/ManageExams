@@ -69,7 +69,7 @@ public class Main extends JFrame {
 
     private void initComponentsCustom() throws SQLException {
     	exam_BLL = new Exam_BLL();
-        this.setTitle("ManageExams - Xin chào, " + currentUser);
+        this.setTitle("ManageExams - Xin chào, " + currentUser.getUserFullName());
         this.setSize(new Dimension(1000, 600));
         getContentPane().setLayout(new BorderLayout(0, 0));
         this.setLocationRelativeTo(null);
@@ -128,7 +128,7 @@ public class Main extends JFrame {
 		panel_1.add(lblNewLabel_1);
 		
 		JButton btnNewButton_2 = new JButton("Lưu thay đổi");
-		btnNewButton_2.setBounds(70, 274, 118, 21);
+		btnNewButton_2.setBounds(146, 205, 118, 21);
 		panel_1.add(btnNewButton_2);
 		
 		JPanel panel_2 = new JPanel();
@@ -188,6 +188,8 @@ public class Main extends JFrame {
 		usernameTxt.setColumns(10);
 		usernameTxt.setText(currentUser.getUserName());
 		usernameTxt.setBounds(92, 125, 172, 26);
+		usernameTxt.setEditable(false);
+		usernameTxt.setEnabled(false);
 		panel_1.add(usernameTxt);
 		
 		passwordTxt = new JPasswordField();
@@ -201,12 +203,8 @@ public class Main extends JFrame {
         pack();
     }
     
-    
-
     public static void main(String[] args) {
-        
-        SwingUtilities.invokeLater(() -> {
-            
+        SwingUtilities.invokeLater(() -> {    
             new LoginScreen().setVisible(true);
         });
     }
