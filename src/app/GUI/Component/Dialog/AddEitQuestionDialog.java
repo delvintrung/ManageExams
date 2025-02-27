@@ -462,13 +462,13 @@ public class AddEitQuestionDialog extends JDialog {
         
         JRadioButton radioIsRight_1 = new JRadioButton("Đúng");
         groupIsRight.add(radioIsRight_1);
-        radioIsRight_1.setSelected(true);
         radioIsRight_1.setFont(new Font("Verdana", Font.PLAIN, 10));
         radioIsRight_1.setBackground(Color.WHITE);
         radioIsRight_1.setBounds(139, 6, 62, 17);
         answerItemPanel_1.add(radioIsRight_1);
         
         JRadioButton rdbtnNewRadioButton_1_1_1 = new JRadioButton("Sai");
+        rdbtnNewRadioButton_1_1_1.setSelected(true);
         groupIsRight.add(rdbtnNewRadioButton_1_1_1);
         rdbtnNewRadioButton_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 10));
         rdbtnNewRadioButton_1_1_1.setBackground(Color.WHITE);

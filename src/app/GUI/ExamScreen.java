@@ -6,7 +6,8 @@
 	import java.sql.SQLException;
 	
 	import javax.swing.ButtonGroup;
-	import javax.swing.JButton;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 	import javax.swing.JFrame;
 	import javax.swing.JLabel;
 	import javax.swing.JOptionPane;
@@ -18,10 +19,12 @@
 	import app.DAL.Log_DAL;
 	import app.DTO.User_DTO;
 	import app.GUI.Component.CountdownTimer;
-	
-	import java.awt.Color;
+import app.Helper.QuestionItemInList;
+
+import java.awt.Color;
 	import javax.swing.SwingConstants;
 	import javax.swing.JList;
+import javax.swing.JScrollPane;
 	
 	public class ExamScreen extends JFrame {
 	
@@ -38,6 +41,8 @@
 	    private String[] userAnswers;
 	    private User_DTO currentUser;
 	    private String currentExCode;
+	    private DefaultListModel<String> listModel;
+	    private JList<String> listCauHoi;
 	
 	    public ExamScreen(User_DTO currentUser,String[] questions, String[][] options, String[] correctAnswers, String[] userAnswers,String exCode ) {
 	    	getContentPane().setBackground(Color.WHITE);
@@ -56,6 +61,7 @@
 	        cardLayout = new CardLayout();
 	        cardPanel = new JPanel(cardLayout);
 	        cardPanel.setBackground(Color.WHITE);
+	        listModel = new DefaultListModel<String>();
 			
 			
 	
@@ -65,11 +71,15 @@
 	        cardPanel_1.setBackground(Color.WHITE);
 	
 	        for (int i = 0; i < questions.length; i++) {
+	        	listModel.addElement(questions[i]);
 	            cardPanel_1.add(createQuestionPanel(i), "Question" + i);
 	        }
 	        getContentPane().setLayout(null);
 	
 	        getContentPane().add(cardPanel_1);
+	        
+	        JList list = new JList();
+	        cardPanel_1.add(list, "name_340240842288100");
 	        
 	        JPanel panel = new JPanel();
 	        panel.setBackground(new Color(255, 255, 255));
@@ -92,10 +102,14 @@
 	        lblNewLabel_2.setBounds(10, 81, 158, 13);
 	        panel.add(lblNewLabel_2);
 	        
-	        JList listcauhoi = new JList();
-	        listcauhoi.setBounds(20, 104, 238, 414);
-	        panel.add(listcauhoi);
-	        setVisible(true);
+	        listCauHoi = new JList(listModel);
+	        listCauHoi.setSelectedIndex(0);
+	        listCauHoi.setVisibleRowCount(10);
+	        listCauHoi.setFont(new Font("Verdana", Font.PLAIN, 10));
+	        listCauHoi.setBounds(20, 104, 238, 414);
+	        panel.add(listCauHoi);
+	        
+	        changeCardLayout();
 	    }
 	
 	    private JPanel createQuestionPanel(int index) {
@@ -123,9 +137,9 @@
 	        questionLabel.setBounds(105, 71, 760, 33);
 	        panel.add(questionLabel);
 	        
-	        JLabel lblNewLabel_1 = new JLabel("Câu 10");
+	        JLabel lblNewLabel_1 = new JLabel("Tương lai tươi đẹp đang chờ đón em");
 			lblNewLabel_1.setFont(new Font("Verdana", Font.BOLD, 14));
-			lblNewLabel_1.setBounds(66, 24, 78, 13);
+			lblNewLabel_1.setBounds(66, 20, 538, 18);
 			panel.add(lblNewLabel_1);
 	
 	        
@@ -135,7 +149,7 @@
 			optionPanel.setBackground(Color.WHITE);
 			optionPanel.setBounds(66, 337, 585, 182);
 			panel.add(optionPanel);
-			optionPanel.setLayout(new GridLayout(2,2));
+			optionPanel.setLayout(new GridLayout(3,2));
 	        ButtonGroup group = new ButtonGroup();
 	        JRadioButton[] buttons = new JRadioButton[4];
 	
@@ -198,13 +212,30 @@
 	    }
 	
 	    private void showNextQuestion() {
-	        currentQuestion++;
-	        cardLayout.show(cardPanel_1, "Question" + currentQuestion);
+	    	if (currentQuestion + 1 < listModel.size()) {
+	            currentQuestion++; 
+	            listCauHoi.setSelectedIndex(currentQuestion); 
+	            cardLayout.show(cardPanel_1, "Question" + currentQuestion);
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Bạn đã xem hết các câu hỏi!");
+	        }
 	    }
 	
 	    private void showPreviousQuestion() {
-	        currentQuestion--;
-	        cardLayout.show(cardPanel_1, "Question" + currentQuestion);
+	    	if (currentQuestion - 1 >= 0 ) {
+	            currentQuestion--; 
+	            listCauHoi.setSelectedIndex(currentQuestion); 
+	            cardLayout.show(cardPanel_1, "Question" + currentQuestion);
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Không còn câu hỏi nào khác");
+	        }
+	    }
+	    
+	    private void changeCardLayout() {
+	    	listCauHoi.addListSelectionListener(e-> {
+	    		currentQuestion = listCauHoi.getSelectedIndex();
+	    		cardLayout.show(cardPanel_1, "Question" + currentQuestion);
+	    	});
 	    }
 	
 	    private void showResults() throws SQLException {

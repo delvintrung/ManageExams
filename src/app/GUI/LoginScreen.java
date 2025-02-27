@@ -9,6 +9,8 @@ import app.DTO.User_DTO;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
@@ -49,6 +51,29 @@ public class LoginScreen extends JFrame {
 				}
 			  }
 			} );
+		passwordField.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // Không cần xử lý
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                	try {
+    					checkLogin();
+    				} catch (SQLException e1) {
+    					// TODO Auto-generated catch block
+    					e1.printStackTrace();
+    				}
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // Không cần xử lý
+            }
+        });
 	}
 	
 	private void checkLogin() throws SQLException {
