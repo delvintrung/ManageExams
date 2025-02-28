@@ -16,25 +16,15 @@ import javax.swing.JOptionPane;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginScreen extends JFrame {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7465587089766977890L;
-	/**
-	 * 
-	 */
 	private JTextField textField;
 	private JPasswordField passwordField;
-	
 	private JButton btnLogin;
 	private JButton btnRegister;
 	
 	private Login_DAL loginDAL = new Login_DAL();
-	
-	Main main;
-	
-	RegisterScreen registerScreen;
-	
+	private Main main;
+	private RegisterScreen registerScreen;
 	
 	public LoginScreen() {
 		initComponents();
@@ -76,20 +66,18 @@ public class LoginScreen extends JFrame {
         	dispose();
         	return;
         } else {
-        	main = new Main(account);
-        	main.setVisible(true);
+        	HomeScreen homeScreen = new HomeScreen(account);
+        	homeScreen.setVisible(true);
         	dispose();
         	System.out.println("Dang nhap thanh cong");
         }
 	} 
 
 
-
 	private void initComponentsCustom() {
 		// TODO Auto-generated method stub
 		this.setLocationRelativeTo(null);
 	}
-
 
 
 	private void initComponents() {
