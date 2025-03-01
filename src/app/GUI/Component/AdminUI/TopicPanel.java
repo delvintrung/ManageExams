@@ -1,6 +1,7 @@
 package app.GUI.Component.AdminUI;
 
 import java.awt.Color;
+import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
@@ -13,6 +14,7 @@ import app.GUI.Component.Dialog.TopicCRUDDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -78,22 +80,23 @@ public class TopicPanel extends JPanel implements ActionListener {
 			}
 		});
 		txtSearch.setBackground(new Color(255, 255, 255));
-		txtSearch.setBounds(82, 12, 253, 21);
+		txtSearch.setBounds(74, 10, 261, 23);
 		panel.add(txtSearch);
 		txtSearch.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Tìm kiếm:");
-		lblNewLabel.setBounds(10, 14, 54, 17);
+		lblNewLabel.setBounds(10, 10, 54, 23);
 		panel.add(lblNewLabel);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(255, 255, 255));
-		panel_1.setBounds(387, 10, 273, 41);
+		panel_1.setBounds(387, 10, 310, 41);
 		add(panel_1);
 		
 		btnCreate = new JButton("Thêm mới");
 		btnCreate.setBackground(new Color(255, 255, 255));
 		btnCreate.addActionListener(this);
+		panel_1.setLayout(new GridLayout(0, 3, 6, 0));
 		panel_1.add(btnCreate);
 		
 		btnUpdate = new JButton("Sửa");
@@ -115,10 +118,17 @@ public class TopicPanel extends JPanel implements ActionListener {
 		scrollPane.setBounds(0, 0, 718, 398);
 		panel_2.add(scrollPane);
 		
-		tableModel = new DefaultTableModel(new Object[]{"ID", "Tiêu đề", "Topic cha (ID)"}, 0);
+		tableModel = new DefaultTableModel(new Object[]{"ID", "Tiêu đề", "Topic cha (ID)"}, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
 		table = new JTable(tableModel);
-		table.setEnabled(false);
 		table.setBackground(new Color(255, 255, 255));
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 	}
 	

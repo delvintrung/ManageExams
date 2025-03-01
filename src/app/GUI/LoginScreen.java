@@ -45,7 +45,6 @@ public class LoginScreen extends JFrame {
 		// TODO Auto-generated method stub
 		String username = textField.getText();
 		String password = passwordField.getText();
-        User_DTO user = userBLL.getUser(username);
         
         if(username.equals("")) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng");
@@ -53,6 +52,13 @@ public class LoginScreen extends JFrame {
         }
         if(password.equals("")) {
             JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng");
+            return;
+        }
+        
+        User_DTO user = userBLL.getUser(username);
+        
+        if (user == null) {
+        	JOptionPane.showMessageDialog(this, "Tên đăng nhập không tồn tại");
             return;
         }
         if(!BCrypt.checkpw(password, user.getUserPassword())) {

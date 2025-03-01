@@ -212,7 +212,7 @@ public class User_DAL {
 			ConnectDatabase db = new ConnectDatabase();
 			Connection conn = db.connectToDB();
 			  
-			String sql = "UPDATE `users` SET `uStatu`=0 WHERE `userID`=?";
+			String sql = "UPDATE `users` SET `uStatus`=0 WHERE `userID`=?";
 			  
 			PreparedStatement pst = (PreparedStatement) conn.prepareStatement(sql);
 			pst.setInt(1, id);

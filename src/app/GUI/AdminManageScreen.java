@@ -10,6 +10,7 @@ import app.GUI.Component.AdminUI.CreateExamsPanel;
 import app.GUI.Component.AdminUI.DashboardPanel;
 import app.GUI.Component.AdminUI.QuestionsPanel;
 import app.GUI.Component.AdminUI.TopicPanel;
+import app.GUI.Component.AdminUI.UserPanel;
 import app.GUI.Sidebar.SideMenu;
 import java.awt.Color;
 import java.sql.SQLException;
@@ -20,20 +21,12 @@ public class AdminManageScreen extends JFrame {
 	public JPanel Content = new JPanel();
 	public CardLayout cardLayout;
 	public SideMenu sideMenu;
-	QuestionsPanel questionsPanel;
-	DashboardPanel dashboardPanel;
-	CreateExamsPanel createExamsPanel;
-	TopicPanel topicPanel;
+	private QuestionsPanel questionsPanel;
+	private DashboardPanel dashboardPanel;
+	private CreateExamsPanel createExamsPanel;
+	private TopicPanel topicPanel;
+	private UserPanel userPanel;
 
-	/**
-	 * Launch the application.
-	 */
-	
-
-	/**
-	 * Create the frame.
-	 * @throws SQLException 
-	 */
 	public AdminManageScreen(User_DTO currentAdmin) throws SQLException {
 		getContentPane().setBackground(Color.WHITE);
 		initCompponents(currentAdmin);
@@ -51,6 +44,7 @@ public class AdminManageScreen extends JFrame {
 		dashboardPanel = new DashboardPanel(this, currentAdmin);
 		createExamsPanel = new CreateExamsPanel(this, currentAdmin);
 		topicPanel = new TopicPanel(this, currentAdmin);
+		userPanel = new UserPanel(this, currentAdmin);
 		
 		cardLayout = new CardLayout();
 	    Content.setLayout(cardLayout);
@@ -60,8 +54,8 @@ public class AdminManageScreen extends JFrame {
 	    Content.add(questionsPanel, "questions");
 	    Content.add(dashboardPanel, "dashboard");
 	    Content.add(createExamsPanel,"exams");
+	    Content.add(userPanel, "users");
 	    getContentPane().add(Content);
-	    
 	    
 	    
 	    JPanel panel = new SideMenu(this, currentAdmin); 
