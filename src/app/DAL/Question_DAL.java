@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import app.DTO.Answer_DTO;
 import app.DTO.Question_DTO;
 import app.DTO.Topic_DTO;
 import app.Helper.ComboItem;
@@ -124,35 +125,10 @@ public class Question_DAL {
         return result;
     }
 	
-	public List<Question_DTO> getRandomQuestion(String topicIds, int numQues) throws SQLException {
-			List<Question_DTO> result = new ArrayList<Question_DTO>();
-			String query = "SELECT * FROM questions WHERE qTopicID IN " + topicIds + " ORDER BY RAND() LIMIT ?";
-			Connection conn = new ConnectDatabase().connectToDB();
-			PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
-
-			pst.setInt(1, numQues);
-			
-			
-			ResultSet rs = (ResultSet) pst.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("qID");
-                String ho = rs.getString("qContent");
-                String ten = rs.getNString("qPictures");
-                int gioiTinh = rs.getInt("qTopicID");
-                String sdt = rs.getString("qLevel");
-                int email = rs.getInt("qStatus");
-                Question_DTO nv = new Question_DTO(id, ho, ten, gioiTinh, sdt, email);
-                result.add(nv);
-            }
-            
-            return result;
-
-	}
 	
 	
 	
-	
-	public List<Integer> getRandomQuestions(int testID, int numEasy, int numMedium, int numDiff) throws SQLException {
+	public List<Integer> getRandomQuestions(String topicIDs, int numQues, int numEasy, int numMedium, int numDiff) throws SQLException {
 	    List<Integer> questionIds = new ArrayList<>();
 	    Connection conn = new ConnectDatabase().connectToDB();
 
@@ -161,7 +137,7 @@ public class Question_DAL {
 	    int tpID = -1;
 
 	    try (PreparedStatement psTp = conn.prepareStatement(queryTpID)) {
-	        psTp.setInt(1, testID);
+	        psTp.setInt(1, numQues);
 	        ResultSet rsTp = psTp.executeQuery();
 	        if (rsTp.next()) {
 	            tpID = rsTp.getInt("tpID");
@@ -203,8 +179,6 @@ public class Question_DAL {
 
 	    return questionIds;
 	}
-	
-	
 	
 
 

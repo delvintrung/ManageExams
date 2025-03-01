@@ -25,6 +25,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import app.BLL.Answer_BLL;
 import app.BLL.Question_BLL;
@@ -47,12 +48,14 @@ import java.awt.Panel;
 import java.awt.TextField;
 
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import java.awt.GridLayout;
 
@@ -94,6 +97,9 @@ public class AddEitQuestionDialog extends JDialog {
 	 ButtonGroup typeAnswers;
 	 JPanel answerImagePanel;
 	 JButton btnAdd;
+	 private JTree tree;
+	  private DefaultComboBoxModel<ComboItem> comboBoxModel;
+	  private JPopupMenu treePopup;
 
 	public AddEitQuestionDialog(java.awt.Frame parent, boolean modal, String title, QuestionsPanel panelQuestion, String mode, Question_DTO spEdit) {
         super(parent, modal);
@@ -200,7 +206,33 @@ public class AddEitQuestionDialog extends JDialog {
         cbbLevel.setBounds(200, 180, 275, 27);
         getContentPane().add(cbbLevel);
         
-        cbbTopic = new JComboBox<ComboItem>();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("TOPIC");
+//        loadTreeData(root);
+        tree = new JTree(root);
+        tree.setRootVisible(true);
+        tree.setShowsRootHandles(true);
+        tree.expandRow(0);
+        comboBoxModel = new DefaultComboBoxModel<>();
+        
+        cbbTopic = new JComboBox<ComboItem>(comboBoxModel);
+        
+        cbbTopic.addActionListener(e -> {
+            if (cbbTopic.getSelectedIndex() == -1) {
+                treePopup.show(cbbTopic, 0, cbbTopic.getHeight());
+            }
+        });
+        
+        tree.addTreeSelectionListener(e -> {
+            DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (selectedNode != null) {
+                comboBoxModel.removeAllElements();
+                comboBoxModel.addElement(new ComboItem(selectedNode.toString(),6));
+                
+//                
+                cbbTopic.setSelectedIndex(0);
+                treePopup.setVisible(false);
+            }
+        });
         for(ComboItem item: topicComboItems) {
         	cbbTopic.addItem(item);
         }
