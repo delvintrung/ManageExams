@@ -35,7 +35,10 @@ public class Topic_BLL {
 		}
 		return null;
 	} 
-
+	
+	public ArrayList<Topic_DTO> search(String search) {
+		return tpDal.search(search);
+	}
 	
 	public boolean create(Topic_DTO topic) {
 		return tpDal.create(topic) > 0;

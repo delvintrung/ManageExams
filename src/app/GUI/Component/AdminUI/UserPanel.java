@@ -1,36 +1,29 @@
 package app.GUI.Component.AdminUI;
 
 import java.awt.Color;
-import java.awt.GridLayout;
-
-import javax.swing.JPanel;
-
-import app.BLL.Topic_BLL;
-import app.DTO.Topic_DTO;
-import app.DTO.User_DTO;
-import app.GUI.AdminManageScreen;
-import app.GUI.Component.Dialog.TopicCRUDDialog;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
-public class TopicPanel extends JPanel implements ActionListener {
-	private AdminManageScreen main;
-	private User_DTO currentUser;
-	private ArrayList<Topic_DTO> topics = new ArrayList<Topic_DTO>();
-	private Topic_BLL topicBLL;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
+import app.BLL.User_BLL;
+import app.DTO.User_DTO;
+import app.GUI.AdminManageScreen;
+import app.GUI.Component.Dialog.UserCRUDDialog;
+
+import java.awt.GridLayout;
+
+public class UserPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JTextField txtSearch;
 	private JTable table;
@@ -39,29 +32,39 @@ public class TopicPanel extends JPanel implements ActionListener {
 	private JButton btnUpdate;
 	private JButton btnDelete;
 	
-	public TopicPanel(AdminManageScreen main, User_DTO admin) {
-		this.main= main;
+	private AdminManageScreen main;
+	private User_DTO currentUser;
+	private ArrayList<User_DTO> users;
+	private User_BLL userBLL;
+
+	public UserPanel(AdminManageScreen main, User_DTO admin) {
+		this.main = main;
 		this.currentUser = admin;
+		users = new ArrayList<User_DTO>();
+		userBLL = new User_BLL();
+		
 		initComponents();
 		
-		topicBLL = new Topic_BLL();
+		users = userBLL.getUsers();
 		
-		topics = topicBLL.getTopics();
-		
-		loadTableData(topics);
+		loadTableData(users);
 	}
 	
-	private void loadTableData(ArrayList<Topic_DTO> topics) {
+	private void loadTableData(ArrayList<User_DTO> users) {
 		tableModel.setRowCount(0); 
         
-        for (Topic_DTO topic : topics) {
+        for (User_DTO user : users) {
             tableModel.addRow(new Object[]{
-                topic.getTpID(), topic.getTpTitle(), topic.getTpParent()
+                user.getUserID(),
+                user.getUserName(),
+                user.getUserEmail(),
+                user.getUserFullName(),
+                user.getIsAdmin() == 1 ? "Admin" : "User"
             });
         }
 	}
 	
-	public void initComponents() {
+	private void initComponents() {
 		setSize(738,563);
 		setBackground(Color.WHITE);
 		setLayout(null);
@@ -118,7 +121,7 @@ public class TopicPanel extends JPanel implements ActionListener {
 		scrollPane.setBounds(0, 0, 718, 398);
 		panel_2.add(scrollPane);
 		
-		tableModel = new DefaultTableModel(new Object[]{"ID", "Tiêu đề", "Topic cha (ID)"}, 0) {
+		tableModel = new DefaultTableModel(new Object[]{"ID", "Tên đăng nhập", "Email", "Họ tên", "Role"}, 0) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -128,52 +131,60 @@ public class TopicPanel extends JPanel implements ActionListener {
 		};
 		table = new JTable(tableModel);
 		table.setBackground(new Color(255, 255, 255));
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(table);
 	}
 	
 	private int getSelectedRow() {
         int index = table.getSelectedRow();
         if (index == -1) {
-            JOptionPane.showMessageDialog(main, "Bạn chưa chọn topic nào", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(main, "Bạn chưa chọn user nào", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
         return index;
     }
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btnCreate) {
-            TopicCRUDDialog topicDialog = new TopicCRUDDialog(main, true, "Thêm topic", this, "create", null);
-            topicDialog.setVisible(true);
+		int index = getSelectedRow();
+		
+        if (e.getSource() == btnCreate) {
+            UserCRUDDialog userDialog = new UserCRUDDialog(main, true, "Thêm user", this, "create", null);
+            userDialog.setVisible(true);
             
-            topicBLL = new Topic_BLL();
-            topics = topicBLL.getTopics();
-            loadTableData(topics);
-        } else if(e.getSource() == btnDelete) {
-            int index = getSelectedRow();
-            
+            users = userBLL.getUsers();
+            loadTableData(users);
+        } else if (e.getSource() == btnDelete) {
             if (index != -1) {
-                if (JOptionPane.showConfirmDialog(main, "Bạn có chắc muốn xóa topic này không?", "", JOptionPane.YES_NO_OPTION) == 0) {
-                    topicBLL.delete(topics.get(index).getTpID());
+            	if (users.get(index).getIsAdmin() == 1) {
+            		JOptionPane.showMessageDialog(this, "Không thể xóa admin");
+            		return;
+            	}
+            	
+                if (JOptionPane.showConfirmDialog(main, "Bạn có chắc muốn xóa user này không?", "", JOptionPane.YES_NO_OPTION) == 0) {
+                    userBLL.delete(users.get(index).getUserID());
                 }
-                topics = topicBLL.getTopics();
-                loadTableData(topics);
+                
+                users = userBLL.getUsers();
+                loadTableData(users);
             }
-            
-        } else {
-            int index = getSelectedRow();
-            if(index != -1) {
-            	TopicCRUDDialog topicDialog = new TopicCRUDDialog(main, true, "Sửa topic", this, "update", topics.get(index));
-            	topicDialog.setVisible(true);
-            	topics = topicBLL.getTopics();
-            	loadTableData(topics);
+        } else {         
+            if (index != -1) {
+            	if (users.get(index).getUserName().equals("admin")) {
+            		JOptionPane.showMessageDialog(this, "Không thể sửa thông tin admin gốc của hệ thống");
+            		return;
+            	}
+            	
+            	UserCRUDDialog userDialog = new UserCRUDDialog(main, true, "Sửa user", this, "update", users.get(index));
+            	userDialog.setVisible(true);
+            	
+            	users = userBLL.getUsers();
+                loadTableData(users);
             }
         }        
     }
 	
 	public void search() {
 		String search = txtSearch.getText();
-		ArrayList<Topic_DTO> searchList = topicBLL.search(search);
+		ArrayList<User_DTO> searchList = userBLL.search(search);
 		loadTableData(searchList);
 	}
 }

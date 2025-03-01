@@ -6,32 +6,51 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/jbcrypt-0.4.jar">
+	<classpathentry exported="true" kind="lib" path="src/lib/jakarta.persistence-api-3.1.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/mysql-connector-j-8.4.0.jar">
+	<classpathentry exported="true" kind="lib" path="src/lib/jbcrypt-0.4.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="C:/Users/namba/Downloads/apache-log4j-2.24.3-bin/log4j-core-2.24.3.jar">
+=======
+	<classpathentry exported="true" kind="lib" path="src/lib/log4j-api-2.24.3.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/apache-log4j-2.24.3-bin/log4j-api-2.24.3.jar">
+	<classpathentry exported="true" kind="lib" path="src/lib/log4j-core-2.24.3.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/jakarta.persistence-api-3.2.0.jar">
+	<classpathentry exported="true" kind="lib" path="src/lib/mysql-connector-j-8.4.0.jar">
+>>>>>>> e7f93d417fcd4329df6b1c3750e0aa3bacb476b9
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/jakarta.transaction-api-2.0.1.jar">
+	<classpathentry exported="true" kind="lib" path="src/lib/poi-5.2.3.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="src/lib/poi-5.4.0.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="src/lib/poi-examples-5.2.3.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="src/lib/poi-ooxml-5.2.3.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

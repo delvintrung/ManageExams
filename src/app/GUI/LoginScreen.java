@@ -1,9 +1,7 @@
 package app.GUI;
 
 import javax.swing.*;
-
-import app.Main;
-import app.DAL.Login_DAL;
+import app.BLL.User_BLL;
 import app.DTO.User_DTO;
 
 import java.awt.*;
@@ -18,38 +16,31 @@ import javax.swing.JOptionPane;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginScreen extends JFrame {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7465587089766977890L;
-	/**
-	 * 
-	 */
 	private JTextField textField;
 	private JPasswordField passwordField;
-	
 	private JButton btnLogin;
 	private JButton btnRegister;
 	
-	private Login_DAL loginDAL = new Login_DAL();
-	
-	Main main;
-	
-	RegisterScreen registerScreen;
-	
+	private User_BLL userBLL;
+	private RegisterScreen registerScreen;
 	
 	public LoginScreen() {
+		userBLL = new User_BLL();
+		
 		initComponents();
 		initComponentsCustom();
 		btnLogin.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  try {
 					checkLogin();
-				} catch (SQLException e1) {
+				} catch (SQLException ex) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Có lỗi xảy ra! Vui lòng thử lại!");
 				}
 			  }
+
 			} );
 		passwordField.addKeyListener(new KeyListener() {
             @Override
@@ -74,13 +65,14 @@ public class LoginScreen extends JFrame {
                 // Không cần xử lý
             }
         });
+
+
 	}
 	
 	private void checkLogin() throws SQLException {
 		// TODO Auto-generated method stub
 		String username = textField.getText();
 		String password = passwordField.getText();
-        User_DTO account = loginDAL.selectByUserName(username);
         
         if(username.equals("")) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập không được rỗng");
@@ -90,31 +82,36 @@ public class LoginScreen extends JFrame {
             JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng");
             return;
         }
-        if(!BCrypt.checkpw(password, account.getUserPassword())) {
+        
+        User_DTO user = userBLL.getUser(username);
+        
+        if (user == null) {
+        	JOptionPane.showMessageDialog(this, "Tên đăng nhập không tồn tại");
+            return;
+        }
+        if(!BCrypt.checkpw(password, user.getUserPassword())) {
             JOptionPane.showMessageDialog(this, "Sai mật khẩu");
             return;
         }
         
-        if(account != null && account.getIsAdmin() == 1) {
-        	AdminManageScreen adminManageScreen = new AdminManageScreen(account);
+        if(user != null && user.getIsAdmin() == 1) {
+        	AdminManageScreen adminManageScreen = new AdminManageScreen(user);
         	adminManageScreen.setVisible(true);
         	dispose();
         	return;
         } else {
-        	main = new Main(account);
-        	main.setVisible(true);
+        	HomeScreen homeScreen = new HomeScreen(user);
+        	homeScreen.setVisible(true);
         	dispose();
         	System.out.println("Dang nhap thanh cong");
         }
 	} 
 
 
-
 	private void initComponentsCustom() {
 		// TODO Auto-generated method stub
 		this.setLocationRelativeTo(null);
 	}
-
 
 
 	private void initComponents() {

@@ -25,7 +25,6 @@ import javax.swing.JButton;
 import java.awt.Color;
 
 public class RegisterScreen extends javax.swing.JDialog {
-
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField emailTxt;
@@ -66,7 +65,7 @@ public class RegisterScreen extends javax.swing.JDialog {
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Họ Tên");
 		lblNewLabel_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_1.setBounds(47, 153, 84, 13);
+		lblNewLabel_2_1.setBounds(47, 153, 84, 19);
 		panel.add(lblNewLabel_2_1);
 		
 		emailTxt = new JTextField();
@@ -76,12 +75,12 @@ public class RegisterScreen extends javax.swing.JDialog {
 		
 		JLabel lblNewLabel_2_2 = new JLabel("Tên đăng nhập");
 		lblNewLabel_2_2.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_2.setBounds(47, 216, 127, 21);
+		lblNewLabel_2_2.setBounds(47, 195, 127, 18);
 		panel.add(lblNewLabel_2_2);
 		
 		JLabel lblNewLabel_2_2_1 = new JLabel("Mật khẩu");
 		lblNewLabel_2_2_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_2_2_1.setBounds(47, 274, 96, 13);
+		lblNewLabel_2_2_1.setBounds(47, 238, 96, 18);
 		panel.add(lblNewLabel_2_2_1);
 		
 		fullnameTxt = new JTextField();
@@ -91,15 +90,16 @@ public class RegisterScreen extends javax.swing.JDialog {
 		
 		usernameTxt = new JTextField();
 		usernameTxt.setColumns(10);
-		usernameTxt.setBounds(177, 215, 194, 19);
+		usernameTxt.setBounds(177, 195, 194, 19);
 		panel.add(usernameTxt);
 		
 		passwordTxt = new JPasswordField();
-		passwordTxt.setBounds(177, 273, 194, 19);
+		passwordTxt.setBounds(177, 237, 194, 19);
 		panel.add(passwordTxt);
 		
 		btnNewButton = new JButton("Đăng ký");
-		btnNewButton.setBounds(154, 364, 85, 21);
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnNewButton.setBounds(47, 285, 324, 37);
 		panel.add(btnNewButton);
 		
 		JLabel lblNewLabel_3 = new JLabel("");
@@ -144,34 +144,37 @@ public class RegisterScreen extends javax.swing.JDialog {
 		String fullname = fullnameTxt.getText();
 		String username = usernameTxt.getText();
 		String password = passwordTxt.getText();
-		System.out.println(Validator.isEmpty(email) + "|" + !Validator.isEmail(email));
 		
-        if(Validator.isEmpty(email) || !Validator.isEmail(email)) {
+        if (Validator.isEmpty(email) || !Validator.isEmail(email)) {
             JOptionPane.showMessageDialog(this, "Email không được bỏ trống hoặc sai định dạng");
             return;
         }
-        if(fullname.equals("")) {
+        if (fullname.equals("")) {
             JOptionPane.showMessageDialog(this, "Tên hiển thị không được bỏ trống");
             return;
         }
-        if(password.equals("")) {
+        if (password.equals("")) {
             JOptionPane.showMessageDialog(this, "Mật khẩu không được rỗng");
             return;
         }
-        if(username.equals("")) {
+        if (username.equals("")) {
             JOptionPane.showMessageDialog(this, "Tên đăng nhập không được bỏ trống");
+            return;
+        }
+        
+        if (userBLL.getUser(username) != null) {
+        	JOptionPane.showMessageDialog(this, "Tên đăng nhập đã đượcsử dụng!");
             return;
         }
         
         User_DTO newUser = new User_DTO(username, email, password, fullname, 0);
         
-        if (userBLL.create(newUser)) {
-        	JOptionPane.showMessageDialog(this, "Đăng ký thành công");
-        	new LoginScreen().setVisible(true);
-        } else {
+        if (!userBLL.create(newUser)) {
         	JOptionPane.showMessageDialog(this, "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin!");
+        	return;
         }
         
-        
+        JOptionPane.showMessageDialog(this, "Đăng ký thành công");
+    	new LoginScreen().setVisible(true);
 	}
 }
