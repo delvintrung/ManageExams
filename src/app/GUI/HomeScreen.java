@@ -22,9 +22,11 @@ import javax.swing.border.EmptyBorder;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import app.BLL.Exam_BLL;
+import app.BLL.User_BLL;
 import app.DAL.Exam_DAL;
 import app.DTO.User_DTO;
 import app.Helper.ExamData;
+import app.Helper.Validator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -43,8 +45,14 @@ public class HomeScreen extends JFrame {
 	private JButton btnGoToExam;
 	
 	private Exam_BLL exam_BLL;
+	private User_BLL userBLL;
+	private User_DTO currentUser;
 	
-	public HomeScreen(User_DTO currentUser) throws SQLException {
+	public HomeScreen(User_DTO user) throws SQLException {
+		this.currentUser = user;
+		exam_BLL = new Exam_BLL();
+		userBLL = new User_BLL();
+		
 		this.setTitle("ManageExams - Xin chào, " + currentUser.getUserFullName());
         this.setSize(new Dimension(1000, 600));
         getContentPane().setLayout(new BorderLayout(0, 0));
@@ -55,8 +63,6 @@ public class HomeScreen extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
-        exam_BLL = new Exam_BLL();
-
         JLabel lblNewLabel = new JLabel("Những bài thi hiện có");
         lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setBounds(276, 0, 710, 91);
@@ -127,9 +133,14 @@ public class HomeScreen extends JFrame {
 		lblNewLabel_1.setBounds(10, 10, 254, 38);
 		panel_1.add(lblNewLabel_1);
 		
-		JButton btnNewButton_2 = new JButton("Lưu thay đổi");
-		btnNewButton_2.setBounds(146, 205, 118, 21);
-		panel_1.add(btnNewButton_2);
+		JButton btnUpdateUser = new JButton("Lưu thay đổi");
+		btnUpdateUser.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				updateUser(currentUser);
+			}
+		});
+		btnUpdateUser.setBounds(146, 205, 118, 21);
+		panel_1.add(btnUpdateUser);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.WHITE);
@@ -149,14 +160,14 @@ public class HomeScreen extends JFrame {
 		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnGoToExam, btnNewButton_1}));
 		
 		JLabel lblNewLabel_3 = new JLabel("Họ tên");
-		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 12));
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNewLabel_3.setBounds(20, 58, 75, 21);
 		panel_1.add(lblNewLabel_3);
 		
 		JLabel lblNewLabel_3_1 = new JLabel("Email");
 		lblNewLabel_3_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3_1.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblNewLabel_3_1.setFont(new Font("Verdana", Font.PLAIN, 12));
 		lblNewLabel_3_1.setBounds(20, 94, 75, 21);
 		panel_1.add(lblNewLabel_3_1);
 		
@@ -174,27 +185,63 @@ public class HomeScreen extends JFrame {
 		
 		JLabel lblNewLabel_3_1_1 = new JLabel("Tên đăng nhập");
 		lblNewLabel_3_1_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_3_1_1.setBounds(20, 134, 75, 21);
+		lblNewLabel_3_1_1.setFont(new Font("Verdana", Font.PLAIN, 12));
+		lblNewLabel_3_1_1.setBounds(20, 125, 75, 26);
 		panel_1.add(lblNewLabel_3_1_1);
 		
 		JLabel lblNewLabel_3_1_1_1 = new JLabel("Mật khẩu");
 		lblNewLabel_3_1_1_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblNewLabel_3_1_1_1.setBounds(20, 173, 75, 21);
+		lblNewLabel_3_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 12));
+		lblNewLabel_3_1_1_1.setBounds(20, 167, 75, 28);
 		panel_1.add(lblNewLabel_3_1_1_1);
 		
 		usernameTxt = new JTextField();
+		usernameTxt.setEnabled(false);
 		usernameTxt.setColumns(10);
 		usernameTxt.setText(currentUser.getUserName());
 		usernameTxt.setBounds(92, 125, 172, 26);
 		usernameTxt.setEditable(false);
-		usernameTxt.setEnabled(false);
 		panel_1.add(usernameTxt);
 		
 		passwordTxt = new JPasswordField();
 		passwordTxt.setText(currentUser.getUserPassword());
 		passwordTxt.setBounds(92, 165, 172, 30);
 		panel_1.add(passwordTxt);
+		
+		JButton btnLogout = new JButton("Đăng xuất");
+		btnLogout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentUser = null;
+				new LoginScreen().setVisible(true);
+				dispose();
+			}
+		});
+		btnLogout.setBounds(20, 205, 118, 21);
+		panel_1.add(btnLogout);
+	}
+	
+	public void updateUser(User_DTO user) {
+		String fullname = fullnameTxt.getText();
+		String email = emailTxt.getText();
+		String password = passwordTxt.getText();
+		
+		if (fullname.equals("") || email.equals("") || password.equals("")) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+			return;
+		}
+		if (!Validator.isEmail(email)) {
+			JOptionPane.showMessageDialog(this, "Email không hợp lệ!");
+			return;
+		}
+		
+		User_DTO updatedUser = new User_DTO(user.getUserName(), email, password, fullname, 0);
+		
+		if (!userBLL.update(this.currentUser, updatedUser)) {
+			JOptionPane.showMessageDialog(this, "Có lỗi xảy ra! Vui lòng thử lại!");
+			return;
+		}
+		
+		JOptionPane.showMessageDialog(this, "Cập nhật thông tin thành công!");
+		this.currentUser = updatedUser;
 	}
 }

@@ -100,6 +100,7 @@ public class User_DAL {
 	            user.setUserID(rs.getInt("userID"));
 	            user.setUserFullName(rs.getString("userFullName"));
 	            user.setUserEmail(rs.getString("userEmail"));
+	            user.setUserName(rs.getString("userName"));
 	            user.setUserPassword(rs.getString("userPassword"));
 	            user.setIsAdmin(rs.getInt("isAdmin"));
 	        }
@@ -113,6 +114,41 @@ public class User_DAL {
 	    
 	    return user;
 	}
+	
+	public ArrayList<User_DTO> search(String keyword) {
+	    ArrayList<User_DTO> users = new ArrayList<>();
+	    
+	    try {
+	        ConnectDatabase db = new ConnectDatabase();
+	        Connection conn = db.connectToDB();
+
+	        String sql = "SELECT * FROM users WHERE `userName` LIKE ? OR `userEmail` LIKE ? OR `userFullName` LIKE ? AND `uStatus`=1";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        String searchPattern = "%" + keyword + "%";
+	        pst.setString(1, searchPattern);
+	        pst.setString(2, searchPattern);
+	        pst.setString(3, searchPattern);
+
+	        ResultSet rs = pst.executeQuery();
+	        while (rs.next()) {
+	            User_DTO user = new User_DTO();
+	            user.setUserID(rs.getInt("userID"));
+	            user.setUserName(rs.getString("userName"));
+	            user.setUserEmail(rs.getString("userEmail"));
+	            user.setUserFullName(rs.getString("userFullName"));
+	            user.setIsAdmin(rs.getInt("isAdmin"));
+	            users.add(user);
+	        }
+
+	        rs.close();
+	        pst.close();
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return users;
+	}
+
 
 	public int create(User_DTO user) {
 		int res = 0;
@@ -162,6 +198,7 @@ public class User_DAL {
 			pst.close();
 	        conn.close();
 		} catch (SQLException ex) {
+			ex.printStackTrace();
 			Logger.getLogger(Question_DAL.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		

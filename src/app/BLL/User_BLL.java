@@ -30,6 +30,10 @@ public class User_BLL {
     	return userDAL.getUser(userName);
     }
     
+    public ArrayList<User_DTO> search(String search) {
+    	return userDAL.search(search);
+    }
+    
     public boolean create(User_DTO user) {    	
     	if (!user.getUserPassword().equals("")) {
     		String hashedPassword = hashPassword(user.getUserPassword());
@@ -39,13 +43,20 @@ public class User_BLL {
         return userDAL.create(user) > 0;
     }
     
-    public boolean update(User_DTO user) {
-    	if (!user.getUserPassword().equals("")) {
-    		String hashedPassword = hashPassword(user.getUserPassword());
-    		user.setUserPassword(hashedPassword);
+    public boolean update(User_DTO existingUser, User_DTO updatedUser) {
+    	if (
+    			!updatedUser.getUserPassword().equals("") && 
+    			!existingUser.getUserPassword().equals(updatedUser.getUserPassword())
+    		) 
+    	{
+    		String hashedPassword = hashPassword(updatedUser.getUserPassword());
+    		existingUser.setUserPassword(hashedPassword);
     	}
+    	
+    	existingUser.setUserEmail(updatedUser.getUserEmail());
+    	existingUser.setUserFullName(updatedUser.getUserFullName());
         
-        return userDAL.update(user) > 0;
+        return userDAL.update(existingUser) > 0;
     }
     
     public boolean delete(int id) {

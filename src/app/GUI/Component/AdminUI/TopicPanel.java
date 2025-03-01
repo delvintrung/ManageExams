@@ -4,9 +4,7 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 
-import app.BLL.Question_BLL;
 import app.BLL.Topic_BLL;
-import app.DTO.Question_DTO;
 import app.DTO.Topic_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
@@ -15,15 +13,15 @@ import app.GUI.Component.Dialog.TopicCRUDDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import java.awt.FlowLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import java.awt.BorderLayout;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TopicPanel extends JPanel implements ActionListener {
 	private AdminManageScreen main;
@@ -61,9 +59,6 @@ public class TopicPanel extends JPanel implements ActionListener {
         }
 	}
 	
-	/**
-	 * Create the panel.
-	 */
 	public void initComponents() {
 		setSize(738,563);
 		setBackground(Color.WHITE);
@@ -71,15 +66,25 @@ public class TopicPanel extends JPanel implements ActionListener {
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(255, 255, 255));
-		panel.setBounds(10, 10, 273, 41);
+		panel.setBounds(10, 10, 350, 41);
 		add(panel);
 		panel.setLayout(null);
 		
 		txtSearch = new JTextField();
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				search();
+			}
+		});
 		txtSearch.setBackground(new Color(255, 255, 255));
-		txtSearch.setBounds(10, 10, 253, 21);
+		txtSearch.setBounds(82, 12, 253, 21);
 		panel.add(txtSearch);
 		txtSearch.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Tìm kiếm:");
+		lblNewLabel.setBounds(10, 14, 54, 17);
+		panel.add(lblNewLabel);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(255, 255, 255));
@@ -110,8 +115,9 @@ public class TopicPanel extends JPanel implements ActionListener {
 		scrollPane.setBounds(0, 0, 718, 398);
 		panel_2.add(scrollPane);
 		
-		tableModel = new DefaultTableModel(new Object[]{"ID", "Tiêu đề", "Topic cha"}, 0);
+		tableModel = new DefaultTableModel(new Object[]{"ID", "Tiêu đề", "Topic cha (ID)"}, 0);
 		table = new JTable(tableModel);
+		table.setEnabled(false);
 		table.setBackground(new Color(255, 255, 255));
 		scrollPane.setViewportView(table);
 	}
@@ -154,4 +160,10 @@ public class TopicPanel extends JPanel implements ActionListener {
             }
         }        
     }
+	
+	public void search() {
+		String search = txtSearch.getText();
+		ArrayList<Topic_DTO> searchList = topicBLL.search(search);
+		loadTableData(searchList);
+	}
 }
