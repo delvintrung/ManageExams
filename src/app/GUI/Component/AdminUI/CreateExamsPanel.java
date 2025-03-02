@@ -23,8 +23,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JCheckBox;
@@ -32,6 +34,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+
+import com.toedter.calendar.JDateChooser;
+
 import javax.swing.DropMode;
 
 public class CreateExamsPanel extends JPanel {
@@ -54,6 +59,7 @@ public class CreateExamsPanel extends JPanel {
 	private JTextField txtEasyQty;
 	private JTextField txtMediumQty;
 	private JTextField txtDifficultQty;
+	private Date selectedDate = new Date();
 
 	/**
 	 * Create the panel.
@@ -178,12 +184,12 @@ public class CreateExamsPanel extends JPanel {
 		
 		JLabel lblNewLabel_2 = new JLabel("TestCode");
 		lblNewLabel_2.setFont(new Font("Verdana", Font.PLAIN, 10));
-		lblNewLabel_2.setBounds(10, 10, 81, 13);
+		lblNewLabel_2.setBounds(10, 15, 81, 13);
 		panel_1.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("TestTitle");
 		lblNewLabel_2_1.setFont(new Font("Verdana", Font.PLAIN, 10));
-		lblNewLabel_2_1.setBounds(10, 61, 81, 13);
+		lblNewLabel_2_1.setBounds(10, 38, 81, 13);
 		panel_1.add(lblNewLabel_2_1);
 		
 		JLabel lblNewLabel_2_2 = new JLabel("Thời gian(phút)");
@@ -198,14 +204,14 @@ public class CreateExamsPanel extends JPanel {
 		
 		txtTestCode = new JTextField();
 		txtTestCode.setBackground(Color.WHITE);
-		txtTestCode.setBounds(101, 7, 178, 29);
+		txtTestCode.setBounds(101, 7, 178, 19);
 		panel_1.add(txtTestCode);
 		txtTestCode.setColumns(10);
 		
 		txtTestTitle = new JTextField();
 		txtTestTitle.setColumns(10);
 		txtTestTitle.setBackground(Color.WHITE);
-		txtTestTitle.setBounds(101, 45, 178, 29);
+		txtTestTitle.setBounds(101, 36, 178, 19);
 		panel_1.add(txtTestTitle);
 		
 		txtTime = new JTextField();
@@ -219,6 +225,32 @@ public class CreateExamsPanel extends JPanel {
 		txtLimit.setBackground(Color.WHITE);
 		txtLimit.setBounds(472, 45, 91, 29);
 		panel_1.add(txtLimit);
+		
+		JLabel lblNewLabel_2_1_1 = new JLabel("Ngày thi");
+		lblNewLabel_2_1_1.setFont(new Font("Verdana", Font.PLAIN, 10));
+		lblNewLabel_2_1_1.setBounds(10, 73, 81, 13);
+		panel_1.add(lblNewLabel_2_1_1);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBackground(Color.WHITE);
+		panel_3.setBounds(101, 61, 229, 35);
+		panel_1.add(panel_3);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(0, 7, 116, 19);
+        dateChooser.setDate(new Date());
+        
+        JButton btnGetDate = new JButton("Chọn");
+        btnGetDate.setBackground(Color.WHITE);
+        btnGetDate.setBounds(126, 7, 93, 21);
+        
+        btnGetDate.addActionListener(e -> {
+            selectedDate = dateChooser.getDate();
+        });
+        panel_3.setLayout(null);
+
+        panel_3.add(dateChooser);
+        panel_3.add(btnGetDate);
 		
 		
 		initComponents();
@@ -236,7 +268,6 @@ public class CreateExamsPanel extends JPanel {
         List<Integer> selectedTopics = new ArrayList<>();
         for (JCheckBox checkBox : checkBoxList) {
             if (checkBox.isSelected()) {
-            	System.out.println(Integer.parseInt(checkBox.getActionCommand()));
                 selectedTopics.add(Integer.parseInt(checkBox.getActionCommand()));
             }
         }
@@ -246,7 +277,6 @@ public class CreateExamsPanel extends JPanel {
             return;
         }
         
-        String topicIds = selectedTopics.toString().replace("[", "(").replace("]", ")");
 
         
         
@@ -258,44 +288,45 @@ public class CreateExamsPanel extends JPanel {
         int numMediumQty = Integer.parseInt(txtMediumQty.getText());
         int numDifficultQty = Integer.parseInt(txtDifficultQty.getText());
         
-//        List<Question_DTO> questions = qDAL.getRandomQuestions(topicIds, 10, numEasyQty, numMediumQty, numDifficultQty);
-//        
-//        if(validator.isEmpty(testCode))
-//        {
-//        	JOptionPane.showMessageDialog(this, "Chưa điền TestCode", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        }else 
-//        
-//        if(validator.isEmpty(testTitle))
-//        {
-//        	JOptionPane.showMessageDialog(this, "Chưa điền TestTitle", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        }else
-//        
-//        if(validator.isEmpty(String.valueOf(time)))
-//        {
-//        	JOptionPane.showMessageDialog(this, "Chưa điền TestCode", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        } else if(!validator.isInteger(String.valueOf(time))) {
-//        	JOptionPane.showMessageDialog(this, "Thời gian phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        }else
-//        
-//        if(validator.isEmpty(String.valueOf(limit)))
-//        {
-//        	JOptionPane.showMessageDialog(this, "Không được bỏ trống số lần làm", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        } else if(!validator.isInteger(String.valueOf(limit))) {
-//        	JOptionPane.showMessageDialog(this, "Số lần làm phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        } else {
-//        	
-//        		if(tBLL.saveTest(questions, testCode,testTitle,time,limit)) {
-//        			System.out.println("Tao de thi thanh cong");
-//        		}else {
-//        			System.out.println("Tao de that bai");
-//        		};
-//        }
-//        
-//        
-//        if (questions.isEmpty()) {
-//            JOptionPane.showMessageDialog(this, "Không đủ câu hỏi để tạo bài test!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//        } else {
-//            JOptionPane.showMessageDialog(this, "Tạo bài test thành công!\n", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-//        }
+//        List<Integer> questions = qDAL.getRandomQuestions(10, numEasyQty, numMediumQty, numDifficultQty);
+        
+        if(Validator.isEmpty(testCode))
+        {
+        	JOptionPane.showMessageDialog(this, "Chưa điền TestCode", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }else 
+        
+        if(Validator.isEmpty(testTitle))
+        {
+        	JOptionPane.showMessageDialog(this, "Chưa điền TestTitle", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }else
+        
+        if(Validator.isEmpty(String.valueOf(time)))
+        {
+        	JOptionPane.showMessageDialog(this, "Chưa điền TestCode", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } else if(!Validator.isInteger(String.valueOf(time))) {
+        	JOptionPane.showMessageDialog(this, "Thời gian phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }else
+        
+        if(Validator.isEmpty(String.valueOf(limit)))
+        {
+        	JOptionPane.showMessageDialog(this, "Không được bỏ trống số lần làm", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } else if(!Validator.isInteger(String.valueOf(limit))) {
+        	JOptionPane.showMessageDialog(this, "Số lần làm phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } else {
+        	
+	        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            String formattedDate = sdf.format(selectedDate);
+        		if(tBLL.saveTest(testCode,testTitle,time,selectedTopics,limit, numEasyQty, numMediumQty, numDifficultQty, formattedDate)) {
+//        			Get questions
+        			
+        			
+        			System.out.println("Tao de thi thanh cong");
+        		}else {
+        			System.out.println("Tao de that bai");
+        		};
+        }
+        
+        
+        
     }
 }

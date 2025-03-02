@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -127,50 +128,59 @@ public class Question_DAL {
 	
 	
 	
+	private List<Integer> getRandomQuestionsByLevel(List<Integer> topicIDs, String level, int limit) throws SQLException {
+        List<Integer> questionIds = new ArrayList<>();
+        ConnectDatabase db = new ConnectDatabase();
+        Connection conn = (Connection) db.connectToDB();
+
+        String inClause = String.join(",", Collections.nCopies(topicIDs.size(), "?"));
+        String query = "SELECT qID FROM questions WHERE qTopicID IN (" + inClause + ") AND qLevel = ? ORDER BY RAND() LIMIT ?";
+        
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            int index = 1;
+            for (int topicID : topicIDs) {
+                ps.setInt(index++, topicID);
+            }
+            ps.setString(index++, level);
+            ps.setInt(index++, limit);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                questionIds.add(rs.getInt("qID"));
+            }
+        }
+        return questionIds;
+    }
+
+   
 	
-	public List<Integer> getRandomQuestions(String topicIDs, int numQues, int numEasy, int numMedium, int numDiff) throws SQLException {
+	
+	public List<Integer> getRandomQuestions(List<Integer> topics, int numEasy, int numMedium, int numDiff) throws SQLException {
 	    List<Integer> questionIds = new ArrayList<>();
 	    Connection conn = new ConnectDatabase().connectToDB();
 
-	    
-	    String queryTpID = "SELECT tpID FROM test WHERE testID = ?";
-	    int tpID = -1;
+	    String topicIdString = topics.toString().replace("[", "(").replace("]", ")");
+	    System.out.println(topicIdString);
 
-	    try (PreparedStatement psTp = conn.prepareStatement(queryTpID)) {
-	        psTp.setInt(1, numQues);
-	        ResultSet rsTp = psTp.executeQuery();
-	        if (rsTp.next()) {
-	            tpID = rsTp.getInt("tpID");
-	        }
-	    }
+	    String query = "SELECT qID FROM questions WHERE qTopicID IN " + topicIdString + " AND qLevel = ? ORDER BY RAND() LIMIT ?";
 
-	    if (tpID == -1) {
-	        System.out.println("Không tìm thấy chủ đề của bài thi.");
-	        return questionIds;
-	    }
-
-	    
-	    String query = "SELECT qID FROM questions WHERE qTopicID = ? AND qLevel = ? ORDER BY RAND() LIMIT ?";
-	    
 	    try (PreparedStatement ps = conn.prepareStatement(query)) {
-	        ps.setInt(1, tpID);
-
-	        ps.setString(2, "easy");
-	        ps.setInt(3, numEasy);
+	        ps.setString(1, "easy");
+	        ps.setInt(2, numEasy);
 	        ResultSet rsEasy = ps.executeQuery();
 	        while (rsEasy.next()) {
 	            questionIds.add(rsEasy.getInt("qID"));
 	        }
 
-	        ps.setString(2, "medium");
-	        ps.setInt(3, numMedium);
+	        ps.setString(1, "medium");
+	        ps.setInt(2, numMedium);
 	        ResultSet rsMedium = ps.executeQuery();
 	        while (rsMedium.next()) {
 	            questionIds.add(rsMedium.getInt("qID"));
 	        }
 
-	        ps.setString(2, "diff");
-	        ps.setInt(3, numDiff);
+	        ps.setString(1, "hard");
+	        ps.setInt(2, numDiff);
 	        ResultSet rsDiff = ps.executeQuery();
 	        while (rsDiff.next()) {
 	            questionIds.add(rsDiff.getInt("qID"));
@@ -179,6 +189,9 @@ public class Question_DAL {
 
 	    return questionIds;
 	}
+
+
+
 	
 
 

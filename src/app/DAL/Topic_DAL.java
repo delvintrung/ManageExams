@@ -84,6 +84,29 @@ public class Topic_DAL {
 	        }
 	        return null;
 	    }
+	    
+	    public List<Integer> getAllChildTopics(int topic) throws SQLException {
+			
+	        List<Integer> topicIDs = new ArrayList<>();
+	        ConnectDatabase db = new ConnectDatabase();
+	        Connection conn = (Connection) db.connectToDB();
+	        
+	        	topicIDs.add(topic); 
+	        	String query = "SELECT tpID FROM topics WHERE tpParent = ?";
+	            try (PreparedStatement ps = conn.prepareStatement(query)) {
+	                ps.setInt(1,topic);
+	                ResultSet rs = ps.executeQuery();
+	                while (rs.next()) {
+	                    int childID = rs.getInt("tpID");
+	                    topicIDs.addAll(getAllChildTopics(childID)); 
+	                
+	            }
+	        }
+	        
+
+	        
+	        return topicIDs;
+	    }
 	  
 	  public int create(Topic_DTO topic) {
 		  try {
