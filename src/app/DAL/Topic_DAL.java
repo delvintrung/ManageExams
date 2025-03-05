@@ -47,7 +47,7 @@ public class Topic_DAL {
 		  
 		  List<Topic_DTO> result = new ArrayList<Topic_DTO>();
 		  
-		  String query = "SELECT * FROM topics where tpParent = 0";
+		  String query = "SELECT * FROM topics where tpParent > 0";
 		  
 		  ResultSet rs = conn.createStatement().executeQuery(query);
 		  

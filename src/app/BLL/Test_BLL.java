@@ -41,4 +41,17 @@ public class Test_BLL {
         }
 		return false;
 	}
+	public List<Test_DTO> getAllTest() throws SQLException {
+		// TODO Auto-generated method stub
+			
+		return test_DAL.getAllTest();
+	}
+	
+	public int getTestIDByTestCode(String testCode) {
+		return test_DAL.getTestIDByTestCode(testCode);
+	}
+	
+	public boolean GenarateExams( String testCode, List<Integer> questions) throws SQLException {
+		return test_DAL.GenarateExams(testCode, questions);
+	}
 }

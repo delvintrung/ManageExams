@@ -4,16 +4,40 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import app.DTO.Question_DTO;
 import app.DTO.Test_DTO;
 import app.database.ConnectDatabase;
 
 public class Test_DAL {
     private ConnectDatabase db; 
+    
+    public List<Test_DTO> getAllTest() throws SQLException {
+    	List<Test_DTO> tests = new ArrayList<Test_DTO>();
+    	ConnectDatabase db = new ConnectDatabase();
+        Connection conn = (Connection) db.connectToDB();
+        String sql = "SELECT * from test where testStatus = 1";
+        ResultSet rs = conn.createStatement().executeQuery(sql);
+        while(rs.next()) {
+        	
+        	int testID = rs.getInt("testID");
+        	String testCode = rs.getString("testCode");
+        	String testTitle = rs.getString("testTitle");
+        	int testTime = rs.getInt("testTime");
+        	int num_easy = rs.getInt("num_easy");
+        	int num_medium = rs.getInt("num_medium");
+        	int num_diff = rs.getInt("num_diff");
+        	int testLimit = rs.getInt("testLimit");
+        	String testDate = rs.getString("testDate"); 
+        	int testStatus = rs.getInt("testStatus");
+        	Test_DTO newTest = new Test_DTO(testID, testCode,testTitle, testTime, num_easy, num_medium, num_diff,testLimit, testDate, testStatus);
+        	tests.add(newTest);
+        }
+        return tests;
+    }
     
     public int getTestIDByTestCode(String testCode) {
     	int result = 0;
@@ -96,48 +120,30 @@ public class Test_DAL {
         return result;
     }
 
-    public boolean saveTestAndExams(String testCode, String testTitle, int testTime, int tpID, 
-                         int numEasy, int numMedium, int numDiff, int testLimit, 
-                         String testDate, int testStatus, List<Integer> questionIds) throws SQLException {
+    public boolean GenarateExams(String testCode, List<Integer> questionIds) throws SQLException {
+    	System.out.println(questionIds);
         db = new ConnectDatabase();
         Connection conn = db.connectToDB();
-
         try {
-            String queryTest = "INSERT INTO test (testCode, testTilte, testTime, num_easy, num_medium, num_diff, testLimit, testDate, testStatus) " +
-                               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            PreparedStatement psTest = conn.prepareStatement(queryTest);
-            psTest.setString(1, testCode);
-            psTest.setString(2, testTitle);
-            psTest.setInt(3, testTime);
-            psTest.setInt(5, numEasy);
-            psTest.setInt(6, numMedium);
-            psTest.setInt(7, numDiff);
-            psTest.setInt(8, testLimit);
-            psTest.setString(9, testDate);
-            psTest.setInt(10, testStatus);
-
-            psTest.executeUpdate();
-
-            
-            for (char exOrder = 'A'; exOrder <= 'J'; exOrder++) {
-                String exCode = testCode + exOrder; 
-
-                List<Integer> shuffledQuestions = new java.util.ArrayList<>(questionIds);
-                java.util.Collections.shuffle(shuffledQuestions);
-
-                String questionsStr = shuffledQuestions.toString().replace("[", "").replace("]", "");
-
-                String queryExam = "INSERT INTO exams (testCode, exOrder, exCode, ex_quesIDs) VALUES (?, ?, ?, ?)";
-                PreparedStatement psExam = conn.prepareStatement(queryExam);
-                psExam.setString(1, testCode);
-                psExam.setString(2, String.valueOf(exOrder));
-                psExam.setString(3, exCode);
-                psExam.setString(4, questionsStr);
-
-                psExam.executeUpdate();
-                return true;
-            }
+	        for (char exOrder = 'A'; exOrder <= 'J'; exOrder++) {
+	            String exCode = testCode + exOrder; 
+	
+	            List<Integer> shuffledQuestions = new java.util.ArrayList<>(questionIds);
+	            System.out.println(shuffledQuestions);
+	            java.util.Collections.shuffle(shuffledQuestions);
+	
+	            String questionsStr = shuffledQuestions.toString().replace("[", "").replace("]", "");
+	
+	            String queryExam = "INSERT INTO exams (testCode, exOrder, exCode, ex_quesIDs) VALUES (?, ?, ?, ?)";
+	            PreparedStatement psExam = conn.prepareStatement(queryExam);
+	            psExam.setString(1, testCode);
+	            psExam.setString(2, String.valueOf(exOrder));
+	            psExam.setString(3, exCode);
+	            psExam.setString(4, questionsStr);
+	
+	            psExam.executeUpdate();
+	            return true;
+	        }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -147,6 +153,6 @@ public class Test_DAL {
 		return false;
     }
 
-
+    
 	
 }

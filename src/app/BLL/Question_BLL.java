@@ -1,6 +1,7 @@
 package app.BLL;
 
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,5 +120,20 @@ public class Question_BLL {
 			}
 		}
 	}
+	
+	
+	public List<Integer> getQuesOfTestByTestId(int testID) {
+		
+		try {
+			return q_DAL.getQuesOfTestByTestId(testID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
+
  
 }

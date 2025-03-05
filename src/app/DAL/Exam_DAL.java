@@ -61,7 +61,7 @@ public class Exam_DAL {
         List<String> correctAnswersList = new ArrayList<>();
 
         for (int i = 0; i < listIDQues.length; i++) {
-            int quesID = Integer.parseInt(listIDQues[i]);
+            int quesID = Integer.parseInt(listIDQues[i].trim());
             QuestionData questionData = getQuestionWithAnswers(conn, quesID);
             if (questionData != null) {
                 questionsList.add("Câu " + (i + 1) + ": " + questionData.quesText);
@@ -148,6 +148,12 @@ public class Exam_DAL {
         return correctAnswer;
     }
     
-    
+    public int insertExam(Exam_DTO newExam) throws SQLException {
+    	db = new ConnectDatabase();
+        Connection conn = db.connectToDB();
+        String query = "insert into exams() value ()";
+        PreparedStatement pst = conn.prepareStatement(query);
+		return 0;
+    }
     
 }

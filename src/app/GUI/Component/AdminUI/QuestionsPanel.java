@@ -9,11 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -32,7 +30,6 @@ import javax.swing.JTable;
 import java.awt.BorderLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.ImageIcon;
 
 public class QuestionsPanel extends JPanel implements ActionListener  {
 

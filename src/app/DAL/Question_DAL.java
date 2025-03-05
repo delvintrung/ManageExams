@@ -160,7 +160,7 @@ public class Question_DAL {
 	    Connection conn = new ConnectDatabase().connectToDB();
 
 	    String topicIdString = topics.toString().replace("[", "(").replace("]", ")");
-	    System.out.println(topicIdString);
+	    
 
 	    String query = "SELECT qID FROM questions WHERE qTopicID IN " + topicIdString + " AND qLevel = ? ORDER BY RAND() LIMIT ?";
 
@@ -191,7 +191,18 @@ public class Question_DAL {
 	}
 
 
-
+	public List<Integer> getQuesOfTestByTestId(int testID) throws SQLException {
+    	List<Integer> result = new ArrayList<Integer>();
+    	 Connection conn = new ConnectDatabase().connectToDB();
+    	 String query = "SELECT quesID from test_questions where testID = ?";
+    	 PreparedStatement ps = conn.prepareStatement(query);
+    	 ps.setInt(1, testID);
+    	 ResultSet rs = ps.executeQuery();
+    	 while(rs.next()) {
+    		 result.add(rs.getInt("quesID"));
+    	 }
+    	 return result;
+    }
 	
 
 

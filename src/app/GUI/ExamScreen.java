@@ -105,7 +105,7 @@ import javax.swing.JScrollPane;
 	        listCauHoi = new JList(listModel);
 	        listCauHoi.setSelectedIndex(0);
 	        listCauHoi.setVisibleRowCount(10);
-	        listCauHoi.setFont(new Font("Verdana", Font.PLAIN, 10));
+	        listCauHoi.setFont(new Font("Noto Sans", Font.PLAIN, 10));
 	        listCauHoi.setBounds(20, 104, 238, 414);
 	        panel.add(listCauHoi);
 	        
@@ -120,7 +120,7 @@ import javax.swing.JScrollPane;
 	        
 	        
 	        JTextArea txtrDayLaCau = new JTextArea();
-			txtrDayLaCau.setFont(new Font("Maiandra GD", Font.PLAIN, 14));
+			txtrDayLaCau.setFont(new Font("Noto Sans", Font.PLAIN, 14));
 			txtrDayLaCau.setWrapStyleWord(true);
 			txtrDayLaCau.setEditable(false);
 			txtrDayLaCau.setLineWrap(true);
@@ -132,7 +132,7 @@ import javax.swing.JScrollPane;
 	        
 	        
 	        JLabel questionLabel = new JLabel(questions[index]);
-	        questionLabel.setFont(new Font("Verdana", Font.PLAIN, 12));
+	        questionLabel.setFont(new Font("Noto Sans", Font.PLAIN, 12));
 	        questionLabel.setHorizontalAlignment(SwingConstants.LEFT);
 	        questionLabel.setBounds(105, 71, 760, 33);
 	        panel.add(questionLabel);
@@ -151,7 +151,7 @@ import javax.swing.JScrollPane;
 			panel.add(optionPanel);
 			optionPanel.setLayout(new GridLayout(3,2));
 	        ButtonGroup group = new ButtonGroup();
-	        JRadioButton[] buttons = new JRadioButton[4];
+	        JRadioButton[] buttons = new JRadioButton[options[index].length];
 	
 	        for (int i = 0; i < options[index].length; i++) {
 	            buttons[i] = new JRadioButton(options[index][i]);

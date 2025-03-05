@@ -1,15 +1,18 @@
 package app.GUI.Component.AdminUI;
 
 import java.awt.Color;
-
+import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
+import app.BLL.Question_BLL;
 import app.BLL.Test_BLL;
 import app.BLL.Topic_BLL;
 import app.DAL.Question_DAL;
 import app.DAL.Test_DAL;
+import app.DTO.Exam_DTO;
 import app.DTO.Question_DTO;
+import app.DTO.Test_DTO;
 import app.DTO.Topic_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
@@ -22,6 +25,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.http.WebSocket.Listener;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,6 +42,7 @@ import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.DropMode;
+import javax.swing.table.DefaultTableModel;
 
 public class CreateExamsPanel extends JPanel {
 
@@ -49,6 +54,7 @@ public class CreateExamsPanel extends JPanel {
 	Topic_BLL tpBll = new Topic_BLL();
 	Question_DAL qDAL = new Question_DAL();
 	Test_BLL tBLL = new Test_BLL();
+	Question_BLL qBll = new Question_BLL();
 	int space =0;
 	private List<JCheckBox> checkBoxList = new ArrayList<>();
 	private JTextField txtTestCode;
@@ -60,6 +66,8 @@ public class CreateExamsPanel extends JPanel {
 	private JTextField txtMediumQty;
 	private JTextField txtDifficultQty;
 	private Date selectedDate = new Date();
+	private DefaultTableModel tableModel = new DefaultTableModel();
+	public List<Test_DTO> allTest = tBLL.getAllTest();
 
 	/**
 	 * Create the panel.
@@ -72,6 +80,7 @@ public class CreateExamsPanel extends JPanel {
 		setLayout(null);
 		topics = tpBll.getParentTopic();
 		
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(27, 117, 676, 135);
 		add(scrollPane);
@@ -80,6 +89,7 @@ public class CreateExamsPanel extends JPanel {
 		scrollPane.setViewportView(panelSelectTopic);
 		panelSelectTopic.setBackground(Color.WHITE);
 		panelSelectTopic.setLayout(null);
+		panelSelectTopic.setPreferredSize(new Dimension(600, 500));
 		
 		JLabel lblNewLabel = new JLabel("Chọn Topic Cần Tạo");
 		lblNewLabel.setBounds(40, 10, 141, 22);
@@ -136,6 +146,8 @@ public class CreateExamsPanel extends JPanel {
 			chckbxNewCheckBox.setFont(new Font("Verdana", Font.PLAIN, 12));
 			space += 37;
 		}
+		panelSelectTopic.revalidate();
+		panelSelectTopic.repaint();
 		
 		JButton btnCreateTest = new JButton("Tạo bài thi");
 		btnCreateTest.setBackground(Color.WHITE);
@@ -165,16 +177,45 @@ public class CreateExamsPanel extends JPanel {
 		lblNewLabel_1.setFont(new Font("Verdana", Font.PLAIN, 12));
 		lblNewLabel_1.setBounds(10, 10, 154, 23);
 		panel.add(lblNewLabel_1);
+		String[] column = {
+				"TestID", "TestCode", "TestTitle", "TestTime", "Số câu dễ", "Số câu tb", "Số câu khó", "Giới hạn làm", 	"Ngày làm"
+			};
 		
-		table = new JTable();
-		table.setBounds(20, 43, 614, 130);
-		panel.add(table);
+		
+		tableModel = new DefaultTableModel(column,0);
+ 		table = new JTable(tableModel);
+		JScrollPane sp = new JScrollPane(table);
+		sp.setBounds(0, 43, 676, 130);
+		panel.add(sp);
 		
 		JButton btnGenarateTest = new JButton("Trộn đề");
 		btnGenarateTest.setFont(new Font("Verdana", Font.PLAIN, 14));
 		btnGenarateTest.setBackground(Color.WHITE);
 		btnGenarateTest.setBounds(269, 195, 123, 35);
 		panel.add(btnGenarateTest);
+		
+		btnGenarateTest.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				// TODO Auto-generated method stub
+				int column = 1;
+				int row = table.getSelectedRow();
+				String value = table.getModel().getValueAt(row, column).toString();
+				int testID = tBLL.getTestIDByTestCode(value);
+    			
+    			List<Integer> questionsID = qBll.getQuesOfTestByTestId(testID);
+    			
+    			try {
+					tBLL.GenarateExams(value, questionsID);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+    			
+			}
+		});
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
@@ -255,6 +296,7 @@ public class CreateExamsPanel extends JPanel {
 		
 		initComponents();
 		initComponents();
+		loadDataToTable(allTest);
 	}
 
 	private void initComponents() {
@@ -262,6 +304,16 @@ public class CreateExamsPanel extends JPanel {
 		setSize(738,563);
 		
 	}
+	
+	private void loadDataToTable(List<Test_DTO> allTest) {
+		tableModel.setRowCount(0); 
+        
+        for (Test_DTO t : allTest) {
+        	tableModel.addRow(new Object[]{
+                t.getTestID(), t.getTestCode(), t.getTestTitle(), t.getTestTime(), t.getNum_easy(), t.getNum_medium(), t.getNum_diff(),	t.getTestLimit(), t.getTestDate(), t.getTestStatus()
+            });
+        }
+    }
 	
 	
 	private void createTest() throws SQLException {
@@ -317,10 +369,9 @@ public class CreateExamsPanel extends JPanel {
 	        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	            String formattedDate = sdf.format(selectedDate);
         		if(tBLL.saveTest(testCode,testTitle,time,selectedTopics,limit, numEasyQty, numMediumQty, numDifficultQty, formattedDate)) {
-//        			Get questions
-        			
         			
         			System.out.println("Tao de thi thanh cong");
+        			loadDataToTable(tBLL.getAllTest());
         		}else {
         			System.out.println("Tao de that bai");
         		};
