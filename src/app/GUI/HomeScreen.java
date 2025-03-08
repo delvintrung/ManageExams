@@ -8,6 +8,10 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,13 +22,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import app.BLL.Exam_BLL;
+import app.BLL.Result_BLL;
 import app.BLL.User_BLL;
 import app.DAL.Exam_DAL;
+import app.DTO.Result_DTO;
 import app.DTO.User_DTO;
+import app.GUI.Component.Dialog.UserHistoryResultDialog;
 import app.Helper.ExamData;
 import app.Helper.Validator;
 
@@ -43,15 +52,20 @@ public class HomeScreen extends JFrame {
 	private JTextField usernameTxt;
 	private JPasswordField passwordTxt;
 	private JButton btnGoToExam;
+	private DefaultTableModel tableModel;
+	private JTable tblHistory;
 	
 	private Exam_BLL exam_BLL;
 	private User_BLL userBLL;
+	private Result_BLL resultBLL;
 	private User_DTO currentUser;
+	private ArrayList<Result_DTO> historyResults;
 	
 	public HomeScreen(User_DTO user) throws SQLException {
 		this.currentUser = user;
 		exam_BLL = new Exam_BLL();
 		userBLL = new User_BLL();
+		resultBLL = new Result_BLL();
 		
 		this.setTitle("ManageExams - Xin chào, " + currentUser.getUserFullName());
         this.setSize(new Dimension(1000, 600));
@@ -153,11 +167,42 @@ public class HomeScreen extends JFrame {
 		lblNewLabel_2.setBounds(37, 10, 183, 13);
 		panel_2.add(lblNewLabel_2);
 		
-		JButton btnNewButton_1 = new JButton("Xem lịch sử");
-		btnNewButton_1.setBounds(66, 211, 115, 27);
+		JButton btnNewButton_1 = new JButton("Xem tất cả");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				UserHistoryResultDialog historyDialog = 
+						new UserHistoryResultDialog(HomeScreen.this, true, user, historyResults);
+				
+				historyDialog.setVisible(true);
+			}
+		});
+		btnNewButton_1.setBounds(66, 211, 135, 27);
 		panel_2.add(btnNewButton_1);
 		btnNewButton_1.setFont(new Font("Verdana", Font.PLAIN, 14));
 		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{btnGoToExam, btnNewButton_1}));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 33, 234, 168);
+		panel_2.add(scrollPane);
+		
+		tableModel = new DefaultTableModel(new Object[]{"Mã bài thi", "Ngày thi", "Điểm"}, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		};
+		tblHistory = new JTable(tableModel);
+		tblHistory.setBackground(new Color(255, 255, 255));
+		tblHistory.setShowGrid(false);
+		tblHistory.setShowVerticalLines(false);
+		tblHistory.setShowHorizontalLines(false);
+		scrollPane.setViewportView(tblHistory);
+		scrollPane.setBackground(new Color(255, 255, 255));
+		scrollPane.setViewportBorder(null);
+		scrollPane.setBorder(null);
+		scrollPane.getViewport().setBackground(Color.WHITE);
 		
 		JLabel lblNewLabel_3 = new JLabel("Họ tên");
 		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 12));
@@ -218,6 +263,11 @@ public class HomeScreen extends JFrame {
 		});
 		btnLogout.setBounds(20, 205, 118, 21);
 		panel_1.add(btnLogout);
+		
+		historyResults = new ArrayList<Result_DTO>();
+		historyResults = resultBLL.getUserResults(currentUser.getUserID());
+		
+		loadHistoryResultTable(historyResults);
 	}
 	
 	public void updateUser(User_DTO user) {
@@ -243,5 +293,36 @@ public class HomeScreen extends JFrame {
 		
 		JOptionPane.showMessageDialog(this, "Cập nhật thông tin thành công!");
 		this.currentUser = updatedUser;
+	}
+	
+	private void loadHistoryResultTable(ArrayList<Result_DTO> results) {
+		tableModel.setRowCount(0);
+		
+		SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+	    int limit = Math.min(results.size(), 5);
+
+	    for (int i = 0; i < limit; i++) {
+	        Result_DTO result = results.get(i);
+	        try {
+	            Date date = inputFormat.parse(result.getRs_date());
+	            String formattedDate = outputFormat.format(date);
+	            tableModel.addRow(new Object[]{
+	                result.getExCode(),
+	                formattedDate,
+	                result.getRs_mark()
+	            });
+	        } catch (ParseException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	    
+	    DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        for (int i = 0; i < tblHistory.getColumnCount(); i++) {
+        	tblHistory.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
 	}
 }

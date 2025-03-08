@@ -15,6 +15,37 @@ import app.Helper.ComboItem;
 import app.database.ConnectDatabase;
 
 public class Question_DAL {
+	public Question_DTO getQuestion(int id) {
+		Question_DTO question = null;
+		
+		try {
+			ConnectDatabase db = new ConnectDatabase();
+            Connection conn = db.connectToDB();
+            
+            String query = "SELECT * FROM `questions` WHERE `qID` = ? AND `qStatus` = 1";
+            PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
+            pst.setInt(1, id);
+            
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            
+            if (rs.next()) {
+            	question = new Question_DTO();
+            	question.setqID(rs.getInt("qID"));
+            	question.setqContent(rs.getString("qContent"));
+            	question.setqPicture(rs.getString("qPictures"));
+            	question.setqTopicID(rs.getInt("qTopicID"));
+            	question.setqLevel(rs.getString("qLevel"));
+            }
+            
+            rs.close();
+	        pst.close();
+	        conn.close();
+		} catch (SQLException e) {
+			Logger.getLogger(Question_DAL.class.getName()).log(Level.SEVERE, null, e);
+		}
+		
+		return question;
+	}
 	
 	public ArrayList<Question_DTO> selectAll() {
         ArrayList<Question_DTO> result = new ArrayList<Question_DTO>();
@@ -146,17 +177,12 @@ public class Question_DAL {
             }
             
             return result;
-
 	}
-	
-	
-	
 	
 	public List<Integer> getRandomQuestions(int testID, int numEasy, int numMedium, int numDiff) throws SQLException {
 	    List<Integer> questionIds = new ArrayList<>();
 	    Connection conn = new ConnectDatabase().connectToDB();
 
-	    
 	    String queryTpID = "SELECT tpID FROM test WHERE testID = ?";
 	    int tpID = -1;
 
@@ -173,7 +199,6 @@ public class Question_DAL {
 	        return questionIds;
 	    }
 
-	    
 	    String query = "SELECT qID FROM questions WHERE qTopicID = ? AND qLevel = ? ORDER BY RAND() LIMIT ?";
 	    
 	    try (PreparedStatement ps = conn.prepareStatement(query)) {
@@ -203,9 +228,4 @@ public class Question_DAL {
 
 	    return questionIds;
 	}
-	
-	
-	
-
-
 }

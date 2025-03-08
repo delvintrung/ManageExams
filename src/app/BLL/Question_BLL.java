@@ -1,6 +1,5 @@
 package app.BLL;
 
-
 import java.util.ArrayList;
 
 
@@ -8,12 +7,23 @@ import app.DAL.Question_DAL;
 import app.DTO.Question_DTO;
 
 public class Question_BLL {
-	public Question_DAL q_DAL = new Question_DAL();
-	public ArrayList<Question_DTO> questionList = new ArrayList<Question_DTO>();
+	private Question_DAL q_DAL;
+	private ArrayList<Question_DTO> questionList;
+	
+	public Question_BLL() {
+		q_DAL = new Question_DAL();
+		questionList = new ArrayList<Question_DTO>();
+	}
+	
+	public Question_DTO getQuestion(int id) {
+		return q_DAL.getQuestion(id);
+	}
+
 	public ArrayList<Question_DTO> getAllQuestion() {
 		questionList = q_DAL.selectAll();
 		return questionList;
 	}
+	
 	public int getIndexById(int id) {
         for(int i=0; i<this.questionList.size(); i++) {
             if(this.questionList.get(i).getqID() == id)
@@ -89,6 +99,7 @@ public class Question_BLL {
         }
         return false;
     }
+	
 	public boolean edit(Question_DTO q) {
 		if (q_DAL.update(q) != 0) {
         	questionList.set(getIndexById(q.getqID()), q);

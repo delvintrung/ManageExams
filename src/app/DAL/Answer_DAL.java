@@ -11,6 +11,40 @@ import app.DTO.Answer_DTO;
 import app.database.ConnectDatabase;
 
 public class Answer_DAL {
+	public ArrayList<Answer_DTO> getQuestionAnswers(int questionId) {
+		ArrayList<Answer_DTO> list = new ArrayList<Answer_DTO>();
+		
+		try {
+			ConnectDatabase db = new ConnectDatabase(); 
+            Connection conn = (Connection) db.connectToDB();
+            
+            String query = "SELECT * FROM `answers` WHERE `qID` = ? AND `awStatus` = 1";
+            PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
+            pst.setInt(1, questionId);
+            
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            
+            while (rs.next()) {
+            	Answer_DTO answer = new Answer_DTO();
+            	answer.setAwID(rs.getInt("awID"));
+            	answer.setqID(rs.getInt("qID"));
+            	answer.setAwContent(rs.getString("awContent"));
+            	answer.setAwPictures(rs.getString("awPictures"));
+            	answer.setIsRight(rs.getInt("isRight"));
+            	
+            	list.addLast(answer);
+            }
+            
+            rs.close();
+	        pst.close();
+	        conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+	 
 	public List<String> getAnswerByID(int qID) {
         try {
         	List<String> result = new ArrayList<>();

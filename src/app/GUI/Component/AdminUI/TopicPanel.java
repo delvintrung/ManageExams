@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -58,6 +59,13 @@ public class TopicPanel extends JPanel implements ActionListener {
             tableModel.addRow(new Object[]{
                 topic.getTpID(), topic.getTpTitle(), topic.getTpParent()
             });
+        }
+        
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        for (int i = 0; i < table.getColumnCount(); i++) {
+        	table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 	}
 	

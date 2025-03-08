@@ -396,7 +396,7 @@ public class AddEitQuestionDialog extends JDialog {
 
 		hinhAnhSP = new javax.swing.JLabel();
         
-		newQuesID = qBll.q_DAL.getAutoIncrement();
+		newQuesID = qBll.getAutoIncrement();
         uploadImage.addMouseListener(new MouseAdapter() {
 
             public void mousePressed(MouseEvent e) {

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import app.BLL.User_BLL;
@@ -61,6 +62,13 @@ public class UserPanel extends JPanel implements ActionListener {
                 user.getUserFullName(),
                 user.getIsAdmin() == 1 ? "Admin" : "User"
             });
+        }
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        for (int i = 0; i < table.getColumnCount(); i++) {
+        	table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 	}
 	
