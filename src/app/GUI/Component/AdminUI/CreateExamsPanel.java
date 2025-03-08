@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.DropMode;
 
 public class CreateExamsPanel extends JPanel {
 
@@ -50,6 +51,9 @@ public class CreateExamsPanel extends JPanel {
 	private JTextField txtTime;
 	private JTextField txtLimit;
 	Validator validator = new Validator();
+	private JTextField txtEasyQty;
+	private JTextField txtMediumQty;
+	private JTextField txtDifficultQty;
 
 	/**
 	 * Create the panel.
@@ -75,6 +79,45 @@ public class CreateExamsPanel extends JPanel {
 		lblNewLabel.setBounds(40, 10, 141, 22);
 		panelSelectTopic.add(lblNewLabel);
 		lblNewLabel.setFont(new Font("Verdana", Font.PLAIN, 12));
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(255, 255, 255));
+		panel_2.setBounds(437, 0, 237, 133);
+		panelSelectTopic.add(panel_2);
+		panel_2.setLayout(null);
+		
+		JLabel lblNewLabel_3 = new JLabel("Số câu dễ");
+		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 10));
+		lblNewLabel_3.setBounds(10, 10, 93, 13);
+		panel_2.add(lblNewLabel_3);
+		
+		JLabel lblNewLabel_3_1 = new JLabel("Số câu trung bình");
+		lblNewLabel_3_1.setFont(new Font("Verdana", Font.PLAIN, 10));
+		lblNewLabel_3_1.setBounds(10, 53, 138, 13);
+		panel_2.add(lblNewLabel_3_1);
+		
+		JLabel lblNewLabel_3_2 = new JLabel("Số câu khó");
+		lblNewLabel_3_2.setFont(new Font("Verdana", Font.PLAIN, 10));
+		lblNewLabel_3_2.setBounds(10, 96, 93, 13);
+		panel_2.add(lblNewLabel_3_2);
+		
+		txtEasyQty = new JTextField();
+		txtEasyQty.setFont(new Font("Verdana", Font.PLAIN, 10));
+		txtEasyQty.setBounds(141, 7, 44, 19);
+		panel_2.add(txtEasyQty);
+		txtEasyQty.setColumns(2);
+		
+		txtMediumQty = new JTextField();
+		txtMediumQty.setFont(new Font("Verdana", Font.PLAIN, 10));
+		txtMediumQty.setColumns(2);
+		txtMediumQty.setBounds(141, 50, 44, 19);
+		panel_2.add(txtMediumQty);
+		
+		txtDifficultQty = new JTextField();
+		txtDifficultQty.setFont(new Font("Verdana", Font.PLAIN, 10));
+		txtDifficultQty.setColumns(2);
+		txtDifficultQty.setBounds(141, 93, 44, 19);
+		panel_2.add(txtDifficultQty);
 		
 		for (Topic_DTO topic : topics) {
 			
@@ -121,6 +164,12 @@ public class CreateExamsPanel extends JPanel {
 		table.setBounds(20, 43, 614, 130);
 		panel.add(table);
 		
+		JButton btnGenarateTest = new JButton("Trộn đề");
+		btnGenarateTest.setFont(new Font("Verdana", Font.PLAIN, 14));
+		btnGenarateTest.setBackground(Color.WHITE);
+		btnGenarateTest.setBounds(269, 195, 123, 35);
+		panel.add(btnGenarateTest);
+		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.WHITE);
 		panel_1.setBounds(27, 10, 676, 96);
@@ -149,14 +198,14 @@ public class CreateExamsPanel extends JPanel {
 		
 		txtTestCode = new JTextField();
 		txtTestCode.setBackground(Color.WHITE);
-		txtTestCode.setBounds(101, 7, 193, 29);
+		txtTestCode.setBounds(101, 7, 178, 29);
 		panel_1.add(txtTestCode);
 		txtTestCode.setColumns(10);
 		
 		txtTestTitle = new JTextField();
 		txtTestTitle.setColumns(10);
 		txtTestTitle.setBackground(Color.WHITE);
-		txtTestTitle.setBounds(101, 45, 193, 29);
+		txtTestTitle.setBounds(101, 45, 178, 29);
 		panel_1.add(txtTestTitle);
 		
 		txtTime = new JTextField();
@@ -168,7 +217,7 @@ public class CreateExamsPanel extends JPanel {
 		txtLimit = new JTextField();
 		txtLimit.setColumns(10);
 		txtLimit.setBackground(Color.WHITE);
-		txtLimit.setBounds(472, 45, 68, 29);
+		txtLimit.setBounds(472, 45, 91, 29);
 		panel_1.add(txtLimit);
 		
 		
@@ -199,12 +248,17 @@ public class CreateExamsPanel extends JPanel {
         
         String topicIds = selectedTopics.toString().replace("[", "(").replace("]", ")");
 
-//        List<Question_DTO> questions = qDAL.getRandomQuestion(topicIds, 10);
-//        
-//        String testCode = txtTestCode.getText();
-//        String testTitle = txtTestTitle.getText();
-//        int time = Integer.parseInt(txtTime.getText());
-//        int limit = Integer.parseInt(txtLimit.getText());
+        
+        
+        String testCode = txtTestCode.getText();
+        String testTitle = txtTestTitle.getText();
+        int time = Integer.parseInt(txtTime.getText());
+        int limit = Integer.parseInt(txtLimit.getText());
+        int numEasyQty = Integer.parseInt(txtEasyQty.getText());
+        int numMediumQty = Integer.parseInt(txtMediumQty.getText());
+        int numDifficultQty = Integer.parseInt(txtDifficultQty.getText());
+        
+//        List<Question_DTO> questions = qDAL.getRandomQuestions(topicIds, 10, numEasyQty, numMediumQty, numDifficultQty);
 //        
 //        if(validator.isEmpty(testCode))
 //        {
@@ -237,7 +291,7 @@ public class CreateExamsPanel extends JPanel {
 //        		};
 //        }
 //        
-        
+//        
 //        if (questions.isEmpty()) {
 //            JOptionPane.showMessageDialog(this, "Không đủ câu hỏi để tạo bài test!", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //        } else {

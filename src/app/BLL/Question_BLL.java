@@ -1,13 +1,16 @@
 package app.BLL;
 
 import java.util.ArrayList;
+import java.util.List;
 
-
+import app.DAL.Answer_DAL;
 import app.DAL.Question_DAL;
+import app.DTO.Answer_DTO;
 import app.DTO.Question_DTO;
 
 public class Question_BLL {
 	private Question_DAL q_DAL;
+	private Answer_DAL a_DAL= new Answer_DAL();
 	private ArrayList<Question_DTO> questionList;
 	
 	public Question_BLL() {
@@ -108,5 +111,24 @@ public class Question_BLL {
         return false;
 	}
 	
+	public void importWithExcel(List<String> row) {
+		List<Answer_DTO> listAnswer = new ArrayList<Answer_DTO>(); 
+		Question_DTO newQues = new Question_DTO(row.get(0), row.get(1),(int)Double.parseDouble(row.get(2)),row.get(3), 1);
+		
+		for(int i = 4; i < row.size(); i+=2 ) {
+			if(!row.get(i).isEmpty()) {
+				Answer_DTO newAnswer = new Answer_DTO(row.get(i), row.get(i+1) == "TRUE" ? 1 : 0, 1); 
+				listAnswer.add(newAnswer);
+			}
+		}
+		
+		if(newQues != null && listAnswer.size() > 0) {
+			q_DAL.insert(newQues);
+			int newID = q_DAL.getAutoIncrement();
+			for(Answer_DTO ans : listAnswer) {
+				a_DAL.insertAnswerText(newID, ans.getAwContent(), ans.getIsRight());
+			}
+		}
+	}
  
 }

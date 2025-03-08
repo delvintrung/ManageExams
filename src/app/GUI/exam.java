@@ -24,7 +24,7 @@ public class exam extends JPanel {
 		
 		JLabel lblNewLabel_1 = new JLabel("Câu 10");
 		lblNewLabel_1.setFont(new Font("Verdana", Font.BOLD, 14));
-		lblNewLabel_1.setBounds(66, 24, 78, 13);
+		lblNewLabel_1.setBounds(66, 20, 538, 18);
 		add(lblNewLabel_1);
 		
 		JPanel optionPanel = new JPanel();
@@ -32,7 +32,7 @@ public class exam extends JPanel {
 		optionPanel.setBackground(Color.WHITE);
 		optionPanel.setBounds(53, 338, 585, 182);
 		add(optionPanel);
-		optionPanel.setLayout(new GridLayout(2,2));
+		optionPanel.setLayout(new GridLayout(3,2));
 		
 		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("New radio button");
 		rdbtnNewRadioButton_1.setBackground(Color.WHITE);
@@ -41,6 +41,9 @@ public class exam extends JPanel {
 		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("New radio button");
 		rdbtnNewRadioButton_2.setBackground(Color.WHITE);
 		optionPanel.add(rdbtnNewRadioButton_2);
+		
+		JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("New radio button");
+		optionPanel.add(rdbtnNewRadioButton_3);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("New radio button");
 		rdbtnNewRadioButton.setBackground(Color.WHITE);

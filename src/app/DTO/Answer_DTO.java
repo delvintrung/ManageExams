@@ -27,6 +27,13 @@ public class Answer_DTO {
 		this.awStatus = awStatus;
 	}
 
+	public Answer_DTO(String awContent, int isRight, int awStatus) {
+		super();
+		this.awContent = awContent;
+		this.isRight = isRight;
+		this.awStatus = awStatus;
+	}
+
 	public int getAwID() {
 		return awID;
 	}
@@ -74,4 +81,7 @@ public class Answer_DTO {
 	public void setAwStatus(int awStatus) {
 		this.awStatus = awStatus;
 	}
+	
+	
+	
 }

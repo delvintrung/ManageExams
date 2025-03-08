@@ -12,9 +12,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 import app.BLL.Question_BLL;
@@ -22,11 +25,13 @@ import app.DTO.Question_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
 import app.GUI.Component.Dialog.AddEitQuestionDialog;
+import app.Helper.WorkWithExcel;
 
 import java.awt.Font;
 import javax.swing.JTable;
 import java.awt.BorderLayout;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.ImageIcon;
 
 public class QuestionsPanel extends JPanel implements ActionListener  {
@@ -82,10 +87,10 @@ public class QuestionsPanel extends JPanel implements ActionListener  {
 	 private void setColumnWidths() {
 		    table.getColumnModel().getColumn(0).setPreferredWidth(40);  
 		    table.getColumnModel().getColumn(1).setPreferredWidth(210); 
-		    table.getColumnModel().getColumn(2).setPreferredWidth(150); // Cột Link Ảnh
-		    table.getColumnModel().getColumn(3).setPreferredWidth(100); // Cột Topic
-		    table.getColumnModel().getColumn(4).setPreferredWidth(80);  // Cột Mức độ
-		    table.getColumnModel().getColumn(5).setPreferredWidth(80);  // Cột Trạng thái
+		    table.getColumnModel().getColumn(2).setPreferredWidth(150); 
+		    table.getColumnModel().getColumn(3).setPreferredWidth(100); 
+		    table.getColumnModel().getColumn(4).setPreferredWidth(80);  
+		    table.getColumnModel().getColumn(5).setPreferredWidth(80);  
 		}
 	 
 	 private void addRowToTable(Question_DTO question) {
@@ -164,6 +169,7 @@ public class QuestionsPanel extends JPanel implements ActionListener  {
 		editQues.addActionListener(this);
 		addQues.addActionListener(this);
 		removeQues.addActionListener(this);
+		importQues.addActionListener(this);
 	}
 	
 	public int getSelectedRow() {
@@ -205,13 +211,25 @@ public class QuestionsPanel extends JPanel implements ActionListener  {
             }
         }
         
-//        if(e.getSource() == importQues) {
-//            try {
-//                JTableExporter.exportJTableToExcel(spTable);
-//            } catch (IOException ex) {
-//                System.out.println(ex);
-//            }
-//        }
+        if(e.getSource() == importQues) {
+        	WorkWithExcel wwe = new WorkWithExcel();
+            JFileChooser chooseExcel = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files", "xls", "xlsx");
+            chooseExcel.setFileFilter(filter);
+            chooseExcel.setCurrentDirectory(new File("."));
+            int response = chooseExcel.showOpenDialog(null);
+            
+            if(response == JFileChooser.APPROVE_OPTION ) {
+            	String file = new String(chooseExcel.getSelectedFile().getAbsolutePath());
+            	if(wwe.readExcel(file)) {
+            		JOptionPane.showMessageDialog(main, "Đã thêm câu hỏi thành công từ file excel\n path:" + file, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            		allQuestion = q_BLL.getAllQuestion();
+                    loadDataToTable(allQuestion);
+            	} else {
+            		JOptionPane.showMessageDialog(main, "Import file thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            	}
+            }
+        }
         
     }
 	

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import app.DTO.Answer_DTO;
 import app.DTO.Question_DTO;
 import app.DTO.Topic_DTO;
 import app.Helper.ComboItem;
@@ -178,54 +179,39 @@ public class Question_DAL {
             
             return result;
 	}
-	
-	public List<Integer> getRandomQuestions(int testID, int numEasy, int numMedium, int numDiff) throws SQLException {
-	    List<Integer> questionIds = new ArrayList<>();
-	    Connection conn = new ConnectDatabase().connectToDB();
 
-	    String queryTpID = "SELECT tpID FROM test WHERE testID = ?";
-	    int tpID = -1;
+    public List<Integer> getRandomQuestions(List<Integer> topics, int numEasy, int numMedium, int numDiff) throws SQLException {
+        List<Integer> questionIds = new ArrayList<>();
+        Connection conn = new ConnectDatabase().connectToDB();
 
-	    try (PreparedStatement psTp = conn.prepareStatement(queryTpID)) {
-	        psTp.setInt(1, testID);
-	        ResultSet rsTp = psTp.executeQuery();
-	        if (rsTp.next()) {
-	            tpID = rsTp.getInt("tpID");
-	        }
-	    }
+        String topicIdString = topics.toString().replace("[", "(").replace("]", ")");
 
-	    if (tpID == -1) {
-	        System.out.println("Không tìm thấy chủ đề của bài thi.");
-	        return questionIds;
-	    }
 
-	    String query = "SELECT qID FROM questions WHERE qTopicID = ? AND qLevel = ? ORDER BY RAND() LIMIT ?";
-	    
-	    try (PreparedStatement ps = conn.prepareStatement(query)) {
-	        ps.setInt(1, tpID);
+        String query = "SELECT qID FROM questions WHERE qTopicID IN " + topicIdString + " AND qLevel = ? ORDER BY RAND() LIMIT ?";
 
-	        ps.setString(2, "easy");
-	        ps.setInt(3, numEasy);
-	        ResultSet rsEasy = ps.executeQuery();
-	        while (rsEasy.next()) {
-	            questionIds.add(rsEasy.getInt("qID"));
-	        }
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, "easy");
+            ps.setInt(2, numEasy);
+            ResultSet rsEasy = ps.executeQuery();
+            while (rsEasy.next()) {
+                questionIds.add(rsEasy.getInt("qID"));
+            }
 
-	        ps.setString(2, "medium");
-	        ps.setInt(3, numMedium);
-	        ResultSet rsMedium = ps.executeQuery();
-	        while (rsMedium.next()) {
-	            questionIds.add(rsMedium.getInt("qID"));
-	        }
+            ps.setString(1, "medium");
+            ps.setInt(2, numMedium);
+            ResultSet rsMedium = ps.executeQuery();
+            while (rsMedium.next()) {
+                questionIds.add(rsMedium.getInt("qID"));
+            }
 
-	        ps.setString(2, "diff");
-	        ps.setInt(3, numDiff);
-	        ResultSet rsDiff = ps.executeQuery();
-	        while (rsDiff.next()) {
-	            questionIds.add(rsDiff.getInt("qID"));
-	        }
-	    }
+            ps.setString(1, "hard");
+            ps.setInt(2, numDiff);
+            ResultSet rsDiff = ps.executeQuery();
+            while (rsDiff.next()) {
+                questionIds.add(rsDiff.getInt("qID"));
+            }
+        }
 
-	    return questionIds;
-	}
+        return questionIds;
+    }
 }
