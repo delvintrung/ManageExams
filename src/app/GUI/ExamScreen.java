@@ -15,10 +15,13 @@ import javax.swing.JButton;
 	import javax.swing.JRadioButton;
 	import javax.swing.JTextArea;
 	import javax.swing.border.EmptyBorder;
-	
-	import app.DAL.Log_DAL;
-	import app.DTO.User_DTO;
+
+import app.BLL.Result_BLL;
+import app.DAL.Log_DAL;
+import app.DTO.Result_DTO;
+import app.DTO.User_DTO;
 	import app.GUI.Component.CountdownTimer;
+import app.GUI.Component.CustomPanelImage.ImagePanel;
 import app.Helper.QuestionItemInList;
 
 import java.awt.Color;
@@ -34,8 +37,8 @@ import javax.swing.JScrollPane;
 	    private CardLayout cardLayout;
 	    private int currentQuestion = 0;
 	    private String[] questions;
-	    
-	    private String[][] options ;
+	    private String[] images;
+	    private String[][] options;
 	
 	    private String[] correctAnswers;
 	    private String[] userAnswers;
@@ -43,8 +46,9 @@ import javax.swing.JScrollPane;
 	    private String currentExCode;
 	    private DefaultListModel<String> listModel;
 	    private JList<String> listCauHoi;
+	    private Result_BLL rs_bll = new Result_BLL();
 	
-	    public ExamScreen(User_DTO currentUser,String[] questions, String[][] options, String[] correctAnswers, String[] userAnswers,String exCode ) {
+	    public ExamScreen(User_DTO currentUser,String[] questions,String[] images, String[][] options, String[] correctAnswers, String[] userAnswers,String exCode, int testTime ) {
 	    	getContentPane().setBackground(Color.WHITE);
 	        setTitle("Màn hình làm bài");
 	        setSize(1000,600);
@@ -57,6 +61,7 @@ import javax.swing.JScrollPane;
 	    	this.userAnswers = userAnswers;
 	    	this.currentUser = currentUser;
 	    	this.currentExCode = exCode;
+	    	this.images = images;
 	        
 	        cardLayout = new CardLayout();
 	        cardPanel = new JPanel(cardLayout);
@@ -92,7 +97,7 @@ import javax.swing.JScrollPane;
 	        lblNewLabel.setBounds(14, 23, 138, 25);
 	        panel.add(lblNewLabel);
 	        
-	        JPanel countdownTimer = new CountdownTimer(60);
+	        JPanel countdownTimer = new CountdownTimer(testTime);
 	        countdownTimer.setBackground(new Color(255, 255, 255));
 	        countdownTimer.setBorder(new EmptyBorder(2, 2, 2, 2));
 	        countdownTimer.setBounds(162, 23, 96, 25);
@@ -168,13 +173,10 @@ import javax.swing.JScrollPane;
 	        
 	        panel.add(optionPanel);
 		
-	        JPanel imagepanel = new JPanel();
+	        ImagePanel imagepanel = new ImagePanel(images[index]);
 	        imagepanel.setBackground(Color.WHITE);
 	        imagepanel.setBounds(138, 114, 402, 204);
 			panel.add(imagepanel);
-			
-			JLabel image = new JLabel("image");
-			imagepanel.add(image);
 			
 	
 	        
@@ -258,9 +260,12 @@ import javax.swing.JScrollPane;
 	        }
 	
 	        resultMessage.append("Bạn trả lời đúng ").append(score).append("/").append(questions.length).append(" câu.");
+	        Result_DTO newRs = new Result_DTO(currentUser.getUserID(),currentExCode,userAnswers, (float) score); 
+	        rs_bll.insertResult(newRs);
 	        insertLog(score,questions.length, currentUser.getUserID(),currentExCode);
 	        
 	        JOptionPane.showMessageDialog(this, resultMessage.toString(), "Kết quả", JOptionPane.INFORMATION_MESSAGE);
+	        dispose();
 	    }
 	    
 	    private void insertLog(int score,int length, int userID, String logExCode) throws SQLException {

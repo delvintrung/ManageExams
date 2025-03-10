@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import app.BLL.Exam_BLL;
+import app.BLL.Test_BLL;
 import app.DAL.Exam_DAL;
 import app.DTO.User_DTO;
 import app.GUI.ExamScreen;
@@ -35,6 +36,7 @@ public class Main extends JFrame {
 	private JPasswordField passwordTxt;
 	private Exam_BLL exam_BLL;
 	private JButton btnGoToExam;
+	private Test_BLL test_BLL;
 	
 	public Main () {}
 
@@ -53,13 +55,16 @@ public class Main extends JFrame {
             String testCode = table.getValueAt(selectedRow, 0).toString();
             String exCode = table.getValueAt(selectedRow, 2).toString();
             Exam_DAL dal = new Exam_DAL();
+            test_BLL =  new Test_BLL();
             try {
 				ExamData exam = dal.getExamByID(testCode);
 				String[] questions = exam.questions;
+				String[] images = exam.images; 
 				String[][] options = exam.options;
 				String[] correctAnswers = exam.correctAnswers;
 		        String[] userAnswers = new String[questions.length];
-		        new ExamScreen(currentUser,questions,options, correctAnswers,userAnswers,exCode).setVisible(true);
+		        int testTime = test_BLL.getTestTime(testCode);
+		        new ExamScreen(currentUser,questions,images,options, correctAnswers,userAnswers,exCode,testTime).setVisible(true);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

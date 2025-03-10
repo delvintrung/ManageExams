@@ -51,12 +51,13 @@ public class Exam_DAL {
         }
 
         if (questionsStr == null || questionsStr.isEmpty()) {
-            return new ExamData(new String[]{}, new String[][]{}, new String[]{});
+            return new ExamData(new String[]{},new String[]{}, new String[][]{}, new String[]{});
         }
 
         String[] listIDQues = questionsStr.split(",");
 
         List<String> questionsList = new ArrayList<>();
+        List<String> questionsImages = new ArrayList<>();
         List<String[]> optionsList = new ArrayList<>();
         List<String> correctAnswersList = new ArrayList<>();
 
@@ -65,6 +66,7 @@ public class Exam_DAL {
             QuestionData questionData = getQuestionWithAnswers(conn, quesID);
             if (questionData != null) {
                 questionsList.add("Câu " + (i + 1) + ": " + questionData.quesText);
+                questionsImages.add(questionData.quesImage);
                 optionsList.add(questionData.answers);
                 correctAnswersList.add(questionData.correctAnswer);
             }
@@ -76,6 +78,7 @@ public class Exam_DAL {
 
         return new ExamData(
                 questionsList.toArray(new String[0]),
+                questionsImages.toArray(new String[0]),
                 optionsList.toArray(new String[0][]),
                 correctAnswersList.toArray(new String[0])
         );
@@ -90,10 +93,11 @@ public class Exam_DAL {
         QuestionData questionData = null;
         if (rs.next()) {
             String quesContent = rs.getString("qContent");
+            String quesPicture = rs.getString("qPictures");
             String[] answers = getAnswers(conn, quesID);
             String correctAnswer = getCorrectAnswer(conn, quesID);
 
-            questionData = new QuestionData(quesContent, answers, correctAnswer);
+            questionData = new QuestionData(quesContent,quesPicture, answers, correctAnswer);
         }
 
         rs.close();

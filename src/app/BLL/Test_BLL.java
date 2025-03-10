@@ -54,4 +54,8 @@ public class Test_BLL {
 	public boolean GenarateExams( String testCode, List<Integer> questions) throws SQLException {
 		return test_DAL.GenarateExams(testCode, questions);
 	}
+	
+	public int getTestTime(String testCode) throws SQLException {
+		return test_DAL.getTestTime(testCode);
+	}
 }

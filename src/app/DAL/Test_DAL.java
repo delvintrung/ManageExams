@@ -121,7 +121,7 @@ public class Test_DAL {
     }
 
     public boolean GenarateExams(String testCode, List<Integer> questionIds) throws SQLException {
-    	System.out.println(questionIds);
+    	
         db = new ConnectDatabase();
         Connection conn = db.connectToDB();
         try {
@@ -152,6 +152,20 @@ public class Test_DAL {
         }
 		return false;
     }
+    
+   public int getTestTime(String testCode) throws SQLException {
+	   int result = 0;
+	   db = new ConnectDatabase();
+       Connection conn = db.connectToDB();
+	   String queryExam = "select testTime from test where testCode = ?";
+	   PreparedStatement psExam = conn.prepareStatement(queryExam);
+	   psExam.setString(1, testCode);
+	   ResultSet rs = (ResultSet) psExam.executeQuery();
+       while(rs.next()){
+           result = rs.getInt("testTime");
+       }
+       return result;
+   }
 
     
 	

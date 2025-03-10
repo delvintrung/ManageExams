@@ -204,6 +204,25 @@ public class Question_DAL {
     	 return result;
     }
 	
+	public void saveImageToDatabase(String imageName, int idQues) {
+        String sql = "update questions\r\n"
+        		+ "set qPictures = ? \r\n"
+        		+ "where qID = ?"; 
 
+        try (Connection conn =  new ConnectDatabase().connectToDB();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, imageName);
+            stmt.setInt(2, idQues);
+            int rows = stmt.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Lưu ảnh vào database thành công!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Lưu ảnh vào database that bai!");
+        }
+    }
 
 }
