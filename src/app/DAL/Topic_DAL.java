@@ -49,7 +49,7 @@ public class Topic_DAL {
 		  
 		  List<Topic_DTO> result = new ArrayList<Topic_DTO>();
 		  
-		  String query = "SELECT * FROM topics where tpParent = 0";
+		  String query = "SELECT * FROM topics where tpParent > 0";
 		  
 		  ResultSet rs = conn.createStatement().executeQuery(query);
 		  
@@ -120,8 +120,33 @@ public class Topic_DAL {
 	        Logger.getLogger(Question_DAL.class.getName()).log(Level.SEVERE, null, e);
 	    }
 	    
+
 	    return topicList;
 	}
+
+
+	    public List<Integer> getAllChildTopics(int topic) throws SQLException {
+			
+	        List<Integer> topicIDs = new ArrayList<>();
+	        ConnectDatabase db = new ConnectDatabase();
+	        Connection conn = (Connection) db.connectToDB();
+	        
+	        	topicIDs.add(topic); 
+	        	String query = "SELECT tpID FROM topics WHERE tpParent = ?";
+	            try (PreparedStatement ps = conn.prepareStatement(query)) {
+	                ps.setInt(1,topic);
+	                ResultSet rs = ps.executeQuery();
+	                while (rs.next()) {
+	                    int childID = rs.getInt("tpID");
+	                    topicIDs.addAll(getAllChildTopics(childID)); 
+	                
+	            }
+	        }
+	        
+
+	        
+	        return topicIDs;
+	    }
 
 	  
 	public int create(Topic_DTO topic) {

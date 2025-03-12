@@ -1,5 +1,9 @@
 package app.BLL;
 
+
+import java.security.spec.DSAPublicKeySpec;
+import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,5 +134,31 @@ public class Question_BLL {
 			}
 		}
 	}
+	
+	
+	public List<Integer> getQuesOfTestByTestId(int testID) {
+		
+		try {
+			return q_DAL.getQuesOfTestByTestId(testID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+	
+	
+	public boolean saveImageToDatabase(String imagePath, int idQues) {
+		if(imagePath.isBlank() || idQues < 0) {
+			return false;
+		} else {
+			q_DAL.saveImageToDatabase(imagePath, idQues);
+		}
+		return true;
+		
+	}
+	
+
  
 }

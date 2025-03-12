@@ -2,29 +2,19 @@ package app.GUI.Component.Dialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.filechooser.FileSystemView;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import app.BLL.Answer_BLL;
@@ -34,18 +24,15 @@ import app.DTO.Question_DTO;
 import app.GUI.Component.AdminUI.QuestionsPanel;
 import app.Helper.ComboItem;
 import app.Helper.Validator;
-import jakarta.persistence.criteria.Path;
 
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.FileDialog;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.Panel;
-import java.awt.TextField;
+import java.awt.Frame;
 
 import javax.swing.JTextField;
 import javax.swing.JTree;
@@ -134,6 +121,17 @@ public class AddEitQuestionDialog extends JDialog {
 				handleInsertTextType();
 			}
 		});
+        
+        
+        uploadImage.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				PickAFile();
+			}
+		});
+        
     }
 
 	private void initComponents() {
@@ -191,7 +189,7 @@ public class AddEitQuestionDialog extends JDialog {
         btnAccept.setBounds(284, 318, 117, 21);
         getContentPane().add(btnAccept);
         
-        JButton uploadImage = new JButton("Upload");
+        uploadImage = new JButton("Upload");
         uploadImage.setBounds(519, 118, 85, 39);
         getContentPane().add(uploadImage);
         
@@ -318,7 +316,7 @@ public class AddEitQuestionDialog extends JDialog {
 	
 	public Question_DTO getNewQues() {
         String content = txtQues.getText();
-        String pictureLink = addImage(imageURL);
+        String pictureLink = txtLink.getText();
         String level = (String) cbbLevel.getSelectedItem();
         ComboItem selectedItem = (ComboItem) cbbTopic.getSelectedItem();
         int topicID = selectedItem.getKey();
@@ -326,25 +324,8 @@ public class AddEitQuestionDialog extends JDialog {
         return new Question_DTO(content,pictureLink,topicID,level,1);
     }
 	
-	public String addImage(String imageURL) {
-        Random randomGenerator = new Random();
-        int rand = randomGenerator.nextInt(1000);
-        File sourceFile = new File(imageURL);
-        String destPath = "./src/image/questions";
-        File destFolder = new File(destPath);
-        String newName = rand + sourceFile.getName();
-        try {
-            Path dest = (Path) Paths.get(destFolder.getPath(), newName);
-            Files.copy(sourceFile.toPath(), (OutputStream) dest);
-            if (mode.equals("edit")) {
-                Path oldDest = (Path) Paths.get(destPath, this.qEdit.getqPicture());
-                Files.delete((java.nio.file.Path) oldDest);
-            }
-        } catch (IOException e) {
-        }
-        return newName;
-        
-    }
+	
+     
 	
 	public void addQuestionsEvent() {
         this.newQues = getNewQues();
@@ -427,45 +408,24 @@ public class AddEitQuestionDialog extends JDialog {
 	public void initComponentsCustom() {
 
 		hinhAnhSP = new javax.swing.JLabel();
-        
-		newQuesID = qBll.getAutoIncrement();
-        uploadImage.addMouseListener(new MouseAdapter() {
 
-            public void mousePressed(MouseEvent e) {
-                JFileChooser jfc;
-                jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-                jfc.setAcceptAllFileFilterUsed(false);
-                FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG and GIF images", "png", "gif", "jpg", "jpeg");
-                jfc.addChoosableFileFilter(filter);
-                int returnValue = jfc.showOpenDialog(null);
-                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                    imageURL = (String) jfc.getSelectedFile().getPath();
-                    File file = jfc.getSelectedFile();
-                    ImageIcon imageIcon = new ImageIcon(new javax.swing.ImageIcon(String.valueOf(jfc.getSelectedFile())).getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH));
-                    BufferedImage b;
-                    try {
-                        b = ImageIO.read(file);
-                        hinhAnhSP.setIcon(imageIcon);
-                    } catch (IOException ex) {
-                        Logger.getLogger(AddEitQuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (mode.equals("edit")) {
-                    imageChanged = true;
-                }
-            }
-
-        });
 
         if (mode.equals("edit")) {
         	answerPanel.setVisible(false);
-            imageURL = "/image/product/" + this.qEdit.getqPicture();
-//            hinhAnhSP.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/image/question/" + this.qEdit.getqPicture())).getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
+        	uploadImage.addActionListener(new ActionListener() {
+    			
+    			@Override
+    			public void actionPerformed(ActionEvent e) {
+    				// TODO Auto-generated method stub
+    				String imageFile = PickAFile(); 
+    				addImageToDatabase(imageFile,qEdit.getqID());
+    			}
+    		});
             txtQues.setText(this.qEdit.getqContent());
             cbbLevel.setSelectedItem(this.qEdit.getqLevel());
             cbbTopic.setSelectedItem(this.qEdit.getqTopicID());
             txtLink.setText(this.qEdit.getqPicture());
-            cbbStatus.setSelectedItem(qEdit.getqStatus());
+//            cbbStatus.setSelectedItem(qEdit.getqStatus());
             txtQues.setEnabled(false);
             cbbTopic.setEnabled(false);
             btnAccept.setText("Lưu thông tin");
@@ -510,7 +470,7 @@ public class AddEitQuestionDialog extends JDialog {
         buttonGroupList.add(groupIsRight);
 		}
 		 parent.revalidate(); 
-	        parent.repaint();
+	     parent.repaint();
 	}
 	
 	public void createPanelAnswerImageItem(JPanel parent, int qty) {
@@ -589,4 +549,51 @@ public class AddEitQuestionDialog extends JDialog {
     	JOptionPane.showMessageDialog(this, "Thêm câu hỏi thành công");
     	 dispose();
     }
+    
+    public String PickAFile() {
+    	FileDialog dialog = new FileDialog((Frame)null, "Select File to Open");
+    	dialog.setFile("*.jpg;*.png;*.jpeg;*.webp");
+        dialog.setMode(FileDialog.LOAD);
+        dialog.setVisible(true);
+        String directory = dialog.getDirectory();
+        String file = dialog.getFile();
+        dialog.dispose();
+        if (file == null || file.isBlank()) {
+            System.out.println("Chưa lấy được hình ảnh");
+            return "";
+        } else {
+            String fullPath = directory + file;
+            System.out.println("File đã chọn: " + fullPath);
+            return fullPath;
+        } 
+    }
+    
+public String addImageToDatabase(String imagePath, int idQues) {
+        
+        if (imagePath == null) return null; 
+        Random randomGenerator = new Random();
+        int rand = randomGenerator.nextInt(1000);
+        
+        File sourceFile = new File(imagePath);
+        String destPath = "./src/image/questions";
+        File destFolder = new File(destPath);
+        if (!destFolder.exists()) destFolder.mkdirs();
+
+        String newFileName = rand + "_" + sourceFile.getName(); 
+        File destFile = new File(destFolder, newFileName);
+
+        try {
+            Files.copy(Paths.get(sourceFile.getAbsolutePath()), destFile.toPath());
+
+            
+            qBll.saveImageToDatabase(destFile.getPath(), idQues);
+
+            return newFileName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi khi lưu ảnh!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+    }
+        
 }

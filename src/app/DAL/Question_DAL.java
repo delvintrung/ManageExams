@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -156,62 +157,104 @@ public class Question_DAL {
         return result;
     }
 	
-	public List<Question_DTO> getRandomQuestion(String topicIds, int numQues) throws SQLException {
-			List<Question_DTO> result = new ArrayList<Question_DTO>();
-			String query = "SELECT * FROM questions WHERE qTopicID IN " + topicIds + " ORDER BY RAND() LIMIT ?";
-			Connection conn = new ConnectDatabase().connectToDB();
-			PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
 
-			pst.setInt(1, numQues);
-			
-			
-			ResultSet rs = (ResultSet) pst.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("qID");
-                String ho = rs.getString("qContent");
-                String ten = rs.getNString("qPictures");
-                int gioiTinh = rs.getInt("qTopicID");
-                String sdt = rs.getString("qLevel");
-                int email = rs.getInt("qStatus");
-                Question_DTO nv = new Question_DTO(id, ho, ten, gioiTinh, sdt, email);
-                result.add(nv);
-            }
-            
-            return result;
-	}
-
-    public List<Integer> getRandomQuestions(List<Integer> topics, int numEasy, int numMedium, int numDiff) throws SQLException {
+	
+	
+	private List<Integer> getRandomQuestionsByLevel(List<Integer> topicIDs, String level, int limit) throws SQLException {
         List<Integer> questionIds = new ArrayList<>();
-        Connection conn = new ConnectDatabase().connectToDB();
+        ConnectDatabase db = new ConnectDatabase();
+        Connection conn = (Connection) db.connectToDB();
 
-        String topicIdString = topics.toString().replace("[", "(").replace("]", ")");
-
-
-        String query = "SELECT qID FROM questions WHERE qTopicID IN " + topicIdString + " AND qLevel = ? ORDER BY RAND() LIMIT ?";
-
+        String inClause = String.join(",", Collections.nCopies(topicIDs.size(), "?"));
+        String query = "SELECT qID FROM questions WHERE qTopicID IN (" + inClause + ") AND qLevel = ? ORDER BY RAND() LIMIT ?";
+        
         try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, "easy");
-            ps.setInt(2, numEasy);
-            ResultSet rsEasy = ps.executeQuery();
-            while (rsEasy.next()) {
-                questionIds.add(rsEasy.getInt("qID"));
+            int index = 1;
+            for (int topicID : topicIDs) {
+                ps.setInt(index++, topicID);
             }
-
-            ps.setString(1, "medium");
-            ps.setInt(2, numMedium);
-            ResultSet rsMedium = ps.executeQuery();
-            while (rsMedium.next()) {
-                questionIds.add(rsMedium.getInt("qID"));
-            }
-
-            ps.setString(1, "hard");
-            ps.setInt(2, numDiff);
-            ResultSet rsDiff = ps.executeQuery();
-            while (rsDiff.next()) {
-                questionIds.add(rsDiff.getInt("qID"));
+            ps.setString(index++, level);
+            ps.setInt(index++, limit);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                questionIds.add(rs.getInt("qID"));
             }
         }
-
         return questionIds;
     }
+
+   
+	
+	
+	public List<Integer> getRandomQuestions(List<Integer> topics, int numEasy, int numMedium, int numDiff) throws SQLException {
+	    List<Integer> questionIds = new ArrayList<>();
+	    Connection conn = new ConnectDatabase().connectToDB();
+
+	    String topicIdString = topics.toString().replace("[", "(").replace("]", ")");
+	    
+
+	    String query = "SELECT qID FROM questions WHERE qTopicID IN " + topicIdString + " AND qLevel = ? ORDER BY RAND() LIMIT ?";
+
+	    try (PreparedStatement ps = conn.prepareStatement(query)) {
+	        ps.setString(1, "easy");
+	        ps.setInt(2, numEasy);
+	        ResultSet rsEasy = ps.executeQuery();
+	        while (rsEasy.next()) {
+	            questionIds.add(rsEasy.getInt("qID"));
+	        }
+
+	        ps.setString(1, "medium");
+	        ps.setInt(2, numMedium);
+	        ResultSet rsMedium = ps.executeQuery();
+	        while (rsMedium.next()) {
+	            questionIds.add(rsMedium.getInt("qID"));
+	        }
+
+	        ps.setString(1, "hard");
+	        ps.setInt(2, numDiff);
+	        ResultSet rsDiff = ps.executeQuery();
+	        while (rsDiff.next()) {
+	            questionIds.add(rsDiff.getInt("qID"));
+	        }
+	    }
+
+	    return questionIds;
+	}
+
+
+	public List<Integer> getQuesOfTestByTestId(int testID) throws SQLException {
+    	List<Integer> result = new ArrayList<Integer>();
+    	 Connection conn = new ConnectDatabase().connectToDB();
+    	 String query = "SELECT quesID from test_questions where testID = ?";
+    	 PreparedStatement ps = conn.prepareStatement(query);
+    	 ps.setInt(1, testID);
+    	 ResultSet rs = ps.executeQuery();
+    	 while(rs.next()) {
+    		 result.add(rs.getInt("quesID"));
+    	 }
+    	 return result;
+    }
+	
+	public void saveImageToDatabase(String imageName, int idQues) {
+        String sql = "update questions\r\n"
+        		+ "set qPictures = ? \r\n"
+        		+ "where qID = ?"; 
+
+        try (Connection conn =  new ConnectDatabase().connectToDB();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, imageName);
+            stmt.setInt(2, idQues);
+            int rows = stmt.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Lưu ảnh vào database thành công!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Lưu ảnh vào database that bai!");
+        }
+    }
+
 }
