@@ -408,9 +408,7 @@ public class AddEitQuestionDialog extends JDialog {
 	public void initComponentsCustom() {
 
 		hinhAnhSP = new javax.swing.JLabel();
-        
-		newQuesID = qBll.q_DAL.getAutoIncrement();
-        
+
 
         if (mode.equals("edit")) {
         	answerPanel.setVisible(false);

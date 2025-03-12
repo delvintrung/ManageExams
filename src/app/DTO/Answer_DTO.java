@@ -1,12 +1,12 @@
 package app.DTO;
 
 public class Answer_DTO {
-	int awID;
-	int qID;
-	String awContent;
-	String awPictures;
-	int isRight;
-	int awStatus;
+	private int awID;
+	private int qID;
+	private String awContent;
+	private String awPictures;
+	private int isRight;
+	private int awStatus;
 	
 	public Answer_DTO() {
 		super();
@@ -18,7 +18,6 @@ public class Answer_DTO {
 	}
 	
 	public Answer_DTO(int awID,int qID, String awContent, String awPictures, int isRight, int awStatus) {
-		
 		super();
 		this.awID = awID;
 		this.qID = qID;
@@ -27,8 +26,6 @@ public class Answer_DTO {
 		this.isRight = isRight;
 		this.awStatus = awStatus;
 	}
-	
-	
 
 	public Answer_DTO(String awContent, int isRight, int awStatus) {
 		super();

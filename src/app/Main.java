@@ -1,14 +1,7 @@
 package app;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.sql.SQLException;
-
 import javax.swing.*;
+
 import javax.swing.border.EmptyBorder;
 
 import org.eclipse.wb.swing.FocusTraversalOnArray;
@@ -18,15 +11,12 @@ import app.BLL.Test_BLL;
 import app.DAL.Exam_DAL;
 import app.DTO.User_DTO;
 import app.GUI.ExamScreen;
+
 import app.GUI.LoginScreen;
-import app.Helper.ExamData;
 
 public class Main extends JFrame {
-    /**
-     * 
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	private User_DTO currentUser;
 	private JPanel contentPane;
 	private JTable table;
@@ -40,9 +30,10 @@ public class Main extends JFrame {
 	
 	public Main () {}
 
-    public Main(User_DTO currentUser) throws SQLException {
-        this.currentUser = currentUser;
+
+    public Main() {
         initComponents();
+
         initComponentsCustom();
         btnGoToExam.addActionListener(e -> {
             int selectedRow = table.getSelectedRow(); 
@@ -199,6 +190,7 @@ public class Main extends JFrame {
 		passwordTxt.setText(currentUser.getUserPassword());
 		passwordTxt.setBounds(92, 165, 172, 30);
 		panel_1.add(passwordTxt);
+
     }
 
     private void initComponents() {
@@ -206,12 +198,8 @@ public class Main extends JFrame {
         pack();
     }
     
-    
-
     public static void main(String[] args) {
-        
-        SwingUtilities.invokeLater(() -> {
-            
+        SwingUtilities.invokeLater(() -> {    
             new LoginScreen().setVisible(true);
         });
     }

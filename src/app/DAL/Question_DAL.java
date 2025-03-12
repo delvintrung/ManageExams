@@ -17,6 +17,37 @@ import app.Helper.ComboItem;
 import app.database.ConnectDatabase;
 
 public class Question_DAL {
+	public Question_DTO getQuestion(int id) {
+		Question_DTO question = null;
+		
+		try {
+			ConnectDatabase db = new ConnectDatabase();
+            Connection conn = db.connectToDB();
+            
+            String query = "SELECT * FROM `questions` WHERE `qID` = ? AND `qStatus` = 1";
+            PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
+            pst.setInt(1, id);
+            
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            
+            if (rs.next()) {
+            	question = new Question_DTO();
+            	question.setqID(rs.getInt("qID"));
+            	question.setqContent(rs.getString("qContent"));
+            	question.setqPicture(rs.getString("qPictures"));
+            	question.setqTopicID(rs.getInt("qTopicID"));
+            	question.setqLevel(rs.getString("qLevel"));
+            }
+            
+            rs.close();
+	        pst.close();
+	        conn.close();
+		} catch (SQLException e) {
+			Logger.getLogger(Question_DAL.class.getName()).log(Level.SEVERE, null, e);
+		}
+		
+		return question;
+	}
 	
 	public ArrayList<Question_DTO> selectAll() {
         ArrayList<Question_DTO> result = new ArrayList<Question_DTO>();
@@ -126,6 +157,7 @@ public class Question_DAL {
         return result;
     }
 	
+
 	
 	
 	private List<Integer> getRandomQuestionsByLevel(List<Integer> topicIDs, String level, int limit) throws SQLException {

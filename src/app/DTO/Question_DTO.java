@@ -1,12 +1,16 @@
 package app.DTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Question_DTO {
-	int qID;
-	 String qContent;
-	 String qPicture;
-	 int qTopicID;
-	 String qLevel;
-	 int qStatus;
+	private int qID;
+	private String qContent;
+	private String qPicture;
+	private int qTopicID;
+	private String qLevel;
+	private int qStatus;
+	private List<Answer_DTO> answers;
 	 
 	 public Question_DTO() {
 			super();
@@ -15,6 +19,7 @@ public class Question_DTO {
 			this.qTopicID = 0;
 			this.qLevel = "";
 			this.qStatus = 0;
+			this.answers = new ArrayList<>();
 		}
 	 
 	 public Question_DTO(String qContent, String qPicture, int qTopicID, String qLevel, int qStatus) {
@@ -24,6 +29,7 @@ public class Question_DTO {
 			this.qTopicID = qTopicID;
 			this.qLevel = qLevel;
 			this.qStatus = qStatus;
+			this.answers = new ArrayList<>();
 		}
 	 
 	public Question_DTO(int qID, String qContent, String qPicture, int qTopicID, String qLevel, int qStatus) {
@@ -34,6 +40,7 @@ public class Question_DTO {
 		this.qTopicID = qTopicID;
 		this.qLevel = qLevel;
 		this.qStatus = qStatus;
+		this.answers = new ArrayList<>();
 	}
 
 	public int getqID() {
@@ -83,6 +90,17 @@ public class Question_DTO {
 	public void setqStatus(int qStatus) {
 		this.qStatus = qStatus;
 	}
-	 
+	
+	public List<Answer_DTO> getAnswers() { return answers; }
+    public void setAnswers(List<Answer_DTO> answers) { this.answers = answers; }
+    
+    public Answer_DTO getCorrectAnswer() {
+        for (Answer_DTO answer : answers) {
+            if (answer.getIsRight() == 1) {
+                return answer;
+            }
+        }
+        return null;
+    }
 	 
 }
