@@ -32,7 +32,7 @@ public class Answer_DAL {
             	answer.setAwPictures(rs.getString("awPictures"));
             	answer.setIsRight(rs.getInt("isRight"));
             	
-            	list.addLast(answer);
+            	list.add(answer);
             }
             
             rs.close();

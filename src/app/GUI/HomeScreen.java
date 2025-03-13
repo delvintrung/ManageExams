@@ -108,9 +108,10 @@ public class HomeScreen extends JFrame {
 				ExamData exam = dal.getExamByID(testCode);
 				String[] questions = exam.questions;
 				String[][] options = exam.options;
+				String[] image = exam.images;
 				String[] correctAnswers = exam.correctAnswers;
 		        String[] userAnswers = new String[questions.length];
-		        new ExamScreen(currentUser,questions,options, correctAnswers,userAnswers,exCode).setVisible(true);
+		        new ExamScreen(currentUser,questions,image,options,correctAnswers,userAnswers,exCode,11).setVisible(true);
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

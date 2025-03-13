@@ -16,6 +16,7 @@ import app.DTO.Test_DTO;
 import app.DTO.Topic_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
+import app.GUI.Component.Dialog.SelectExamToExport;
 import app.Helper.Validator;
 
 import javax.swing.JLabel;
@@ -34,12 +35,14 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
+import com.twelvemonkeys.imageio.metadata.MetadataWriter;
 
 import javax.swing.DropMode;
 import javax.swing.table.DefaultTableModel;
@@ -68,6 +71,7 @@ public class CreateExamsPanel extends JPanel {
 	private Date selectedDate = new Date();
 	private DefaultTableModel tableModel = new DefaultTableModel();
 	public List<Test_DTO> allTest = tBLL.getAllTest();
+	private JButton exportDocx;
 
 	/**
 	 * Create the panel.
@@ -191,8 +195,31 @@ public class CreateExamsPanel extends JPanel {
 		JButton btnGenarateTest = new JButton("Trộn đề");
 		btnGenarateTest.setFont(new Font("Verdana", Font.PLAIN, 14));
 		btnGenarateTest.setBackground(Color.WHITE);
-		btnGenarateTest.setBounds(269, 195, 123, 35);
+		btnGenarateTest.setBounds(210, 195, 123, 35);
 		panel.add(btnGenarateTest);
+		
+		exportDocx = new JButton("Xuất file DOCX");
+		exportDocx.setBackground(Color.WHITE);
+		exportDocx.setBounds(354, 195, 154, 35);
+		panel.add(exportDocx);
+		
+		exportDocx.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				// TODO Auto-generated method stub
+				int column = 1;
+				int row = table.getSelectedRow();
+				String value = table.getModel().getValueAt(row, column).toString();
+				SelectExamToExport dialog = new SelectExamToExport(panel);
+	            dialog.setVisible(true);
+	            String selectedCode = dialog.getSelectedExamCode();
+	            if (selectedCode != null) {
+	                System.out.println("Mã đề đã chọn: " + selectedCode);
+	            }
+			}
+		});
 		
 		btnGenarateTest.addActionListener(new ActionListener() {
 			

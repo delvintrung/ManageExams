@@ -17,10 +17,10 @@ public class Result_BLL {
 	
 	public ArrayList<Result_DTO> getUserResults(int userId) {
 		return resultDAL.getUserResults(userId);
-
-	Result_DAL r_DAL = new Result_DAL();
+	}
+		
 	public boolean insertResult(Result_DTO newRes) {
-		if(r_DAL.insertResult(newRes) == 1) {
+		if(resultDAL.insertResult(newRes) == 1) {
 			return true;
 		}
 		

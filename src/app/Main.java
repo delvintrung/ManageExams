@@ -1,5 +1,13 @@
 package app;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.sql.SQLException;
+
 import javax.swing.*;
 
 import javax.swing.border.EmptyBorder;
@@ -13,6 +21,7 @@ import app.DTO.User_DTO;
 import app.GUI.ExamScreen;
 
 import app.GUI.LoginScreen;
+import app.Helper.ExamData;
 
 public class Main extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -27,11 +36,9 @@ public class Main extends JFrame {
 	private Exam_BLL exam_BLL;
 	private JButton btnGoToExam;
 	private Test_BLL test_BLL;
-	
-	public Main () {}
 
 
-    public Main() {
+    public Main() throws SQLException {
         initComponents();
 
         initComponentsCustom();

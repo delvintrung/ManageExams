@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import app.DTO.User_DTO;
+import app.GUI.Component.AdminUI.AnswerPanel;
 import app.GUI.Component.AdminUI.CreateExamsPanel;
 import app.GUI.Component.AdminUI.DashboardPanel;
 import app.GUI.Component.AdminUI.QuestionsPanel;
@@ -26,6 +27,7 @@ public class AdminManageScreen extends JFrame {
 	private CreateExamsPanel createExamsPanel;
 	private TopicPanel topicPanel;
 	private UserPanel userPanel;
+	private AnswerPanel answerPanel;
 
 	public AdminManageScreen(User_DTO currentAdmin) throws SQLException {
 		getContentPane().setBackground(Color.WHITE);
@@ -43,6 +45,7 @@ public class AdminManageScreen extends JFrame {
 		questionsPanel = new QuestionsPanel(this, currentAdmin);
 		dashboardPanel = new DashboardPanel(this, currentAdmin);
 		createExamsPanel = new CreateExamsPanel(this, currentAdmin);
+		answerPanel = new AnswerPanel(this, currentAdmin);
 		topicPanel = new TopicPanel(this, currentAdmin);
 		userPanel = new UserPanel(this, currentAdmin);
 		
@@ -54,6 +57,7 @@ public class AdminManageScreen extends JFrame {
 	    Content.add(questionsPanel, "questions");
 	    Content.add(dashboardPanel, "dashboard");
 	    Content.add(createExamsPanel,"exams");
+	    Content.add(answerPanel, "answers");
 	    Content.add(userPanel, "users");
 	    getContentPane().add(Content);
 	    

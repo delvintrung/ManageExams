@@ -125,11 +125,11 @@ public class Test_DAL {
         db = new ConnectDatabase();
         Connection conn = db.connectToDB();
         try {
-	        for (char exOrder = 'A'; exOrder <= 'J'; exOrder++) {
+	        for (char exOrder = 'C'; exOrder <= 'J'; exOrder++) {
 	            String exCode = testCode + exOrder; 
+	            System.out.println(exCode);
 	
 	            List<Integer> shuffledQuestions = new java.util.ArrayList<>(questionIds);
-	            System.out.println(shuffledQuestions);
 	            java.util.Collections.shuffle(shuffledQuestions);
 	
 	            String questionsStr = shuffledQuestions.toString().replace("[", "").replace("]", "");
@@ -142,8 +142,8 @@ public class Test_DAL {
 	            psExam.setString(4, questionsStr);
 	
 	            psExam.executeUpdate();
-	            return true;
 	        }
+	        return true;
 
         } catch (SQLException e) {
             e.printStackTrace();

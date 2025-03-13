@@ -8,7 +8,7 @@ import java.sql.SQLException;
 public class ConnectDatabase {
 	 private String url = "jdbc:mysql://localhost:3306/manageexams";
 	 private String username = "root";
-	 private String password = "root";
+	 private String password = "0108";
 	 
 	 private Connection conn = null;
 

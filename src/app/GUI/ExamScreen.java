@@ -172,11 +172,14 @@ import javax.swing.JScrollPane;
 	        }
 	        
 	        panel.add(optionPanel);
-		
-	        ImagePanel imagepanel = new ImagePanel(images[index]);
-	        imagepanel.setBackground(Color.WHITE);
-	        imagepanel.setBounds(138, 114, 402, 204);
-			panel.add(imagepanel);
+	        if(!images[index].equals("null") || !images[index].isBlank()) {
+	        	ImagePanel imagepanel = new ImagePanel(images[index]);
+		        imagepanel.setBackground(Color.WHITE);
+		        imagepanel.setBounds(138, 114, 402, 204);
+		        
+				panel.add(imagepanel);
+	        }
+	        
 			
 	
 	        
@@ -260,7 +263,7 @@ import javax.swing.JScrollPane;
 	        }
 	
 	        resultMessage.append("Bạn trả lời đúng ").append(score).append("/").append(questions.length).append(" câu.");
-	        Result_DTO newRs = new Result_DTO(currentUser.getUserID(),currentExCode,userAnswers, (float) score); 
+	        Result_DTO newRs = new Result_DTO(currentUser.getUserID(),currentExCode,userAnswers.toString(), (float) score); 
 	        rs_bll.insertResult(newRs);
 	        insertLog(score,questions.length, currentUser.getUserID(),currentExCode);
 	        

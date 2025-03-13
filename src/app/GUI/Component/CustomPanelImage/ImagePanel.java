@@ -1,23 +1,28 @@
 package app.GUI.Component.CustomPanelImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import javax.imageio.ImageIO;
 
 public class ImagePanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
 
 	 public ImagePanel(String imagePath) {
 		 try {
 	            File imgFile = new File(imagePath);
+	            System.out.println(imgFile);
 	            if (!imgFile.exists()) {
 	                System.out.println("❌ Lỗi: File ảnh không tồn tại! Đường dẫn: " + imgFile.getAbsolutePath());
 	                return;
 	            }
-
+	            ImageIO.setUseCache(false);
 	            image = ImageIO.read(imgFile);
 
 	            if (image == null) {
@@ -62,6 +67,7 @@ public class ImagePanel extends JPanel {
         frame.setLocationRelativeTo(null);
 
         ImagePanel imagePanel = new ImagePanel("./src/image/questions/900_istockphoto-1334419989-612x612.jpg");
+        System.out.println(imagePanel);
         frame.add(imagePanel);
         frame.pack(); 
         frame.setVisible(true);

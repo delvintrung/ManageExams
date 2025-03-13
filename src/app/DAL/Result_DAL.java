@@ -24,7 +24,7 @@ public class Result_DAL {
 		
 		try {
 			ConnectDatabase db = new ConnectDatabase();
-            Connection conn = (Connection) db.connectToDB();
+            Connection conn = (Connection)  db.connectToDB();
             
             String sql = "SELECT * FROM `result` WHERE `userID`=? ORDER BY `rs_date` DESC";
             
