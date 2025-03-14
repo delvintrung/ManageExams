@@ -13,7 +13,7 @@ import app.DTO.Exam_DTO;
 
 public class WritingDocument {
 	
-	public void WriteDoc(Exam_DTO exam) {
+	public void WriteDoc(ExamData exam) {
 		try {
 		XWPFDocument document = new XWPFDocument();
 
@@ -33,29 +33,19 @@ public class WritingDocument {
         infoRun.setText("Họ và tên: ___________________   Lớp: _________");
         infoRun.addBreak();
         
-        List<String> questions = Arrays.asList(
-                "Câu 1: Java là gì?",
-                "Câu 2: Từ khóa nào để khai báo một class trong Java?",
-                "Câu 3: Kiểu dữ liệu nào dùng để lưu số thực?",
-                "Câu 4: Vòng lặp nào trong Java?"
-        );
+        String[] questions = exam.questions;
 
-        List<List<String>> answers = Arrays.asList(
-                Arrays.asList("A. Một loại cà phê", "B. Một ngôn ngữ lập trình", "C. Một hệ điều hành", "D. Một trình duyệt"),
-                Arrays.asList("A. define", "B. class", "C. struct", "D. object"),
-                Arrays.asList("A. int", "B. double", "C. boolean", "D. char"),
-                Arrays.asList("A. for", "B. loop", "C. repeat", "D. switch")
-        );
+        String[][] answers = exam.options;
 
        
-        for (int i = 0; i < questions.size(); i++) {
+        for (int i = 0; i < questions.length; i++) {
             XWPFParagraph questionParagraph = document.createParagraph();
             XWPFRun questionRun = questionParagraph.createRun();
-            questionRun.setText(questions.get(i));
+            questionRun.setText(questions[i]);
             questionRun.setBold(true);
 
             
-            for (String ans : answers.get(i)) {
+            for (String ans : answers[i]) {
                 XWPFParagraph answerParagraph = document.createParagraph();
                 XWPFRun answerRun = answerParagraph.createRun();
                 answerRun.setText(ans);

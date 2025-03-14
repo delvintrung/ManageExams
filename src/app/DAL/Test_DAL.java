@@ -10,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import app.DTO.Test_DTO;
+import app.Helper.ExamData;
+import app.Helper.QuestionData;
 import app.database.ConnectDatabase;
 
 public class Test_DAL {
@@ -167,6 +169,5 @@ public class Test_DAL {
        return result;
    }
 
-    
-	
+   
 }

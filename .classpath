@@ -81,17 +81,22 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/imageio-metadata-3.10.1.jar">
+	<classpathentry kind="lib" path="C:/Users/namba/git/repository/ManageExams/src/lib/common-image-3.10.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/common-image-3.10.1.jar">
+	<classpathentry kind="lib" path="C:/Users/namba/git/repository/ManageExams/src/lib/common-io-3.10.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/namba/Downloads/common-io-3.10.1.jar">
+	<classpathentry kind="lib" path="C:/Users/namba/git/repository/ManageExams/src/lib/commons-compress-1.21.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/namba/git/repository/ManageExams/src/lib/imageio-metadata-3.10.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

@@ -15,12 +15,17 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import app.BLL.Exam_BLL;
+import app.Helper.ExamData;
+import app.Helper.WritingDocument;
+
 public class SelectExamToExport extends JDialog {
 
 	private JComboBox<String> comboBox;
     private String selectedExamCode;
+    private Exam_BLL eBll = new Exam_BLL();
 
-    public SelectExamToExport(JPanel parent) {
+    public SelectExamToExport(JPanel parent, String testCode) {
         super();
         setSize(300, 150);
         setLocationRelativeTo(parent);
@@ -45,13 +50,17 @@ public class SelectExamToExport extends JDialog {
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Xử lý sự kiện khi nhấn nút "In Đề"
+        
         printButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedExamCode = (String) comboBox.getSelectedItem();
-                JOptionPane.showMessageDialog(SelectExamToExport.this, "Đã chọn mã đề: " + selectedExamCode);
-                dispose(); // Đóng dialog
+	            if (selectedExamCode != null) {
+	                ExamData examData = eBll.getExambyTestCodeAndExOrder(testCode, selectedExamCode);
+	                WritingDocument writeDoc = new WritingDocument();
+	                writeDoc.WriteDoc(examData);
+	            }
+                dispose(); 
             }
         });
 

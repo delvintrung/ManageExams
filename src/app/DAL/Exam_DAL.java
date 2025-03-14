@@ -83,6 +83,55 @@ public class Exam_DAL {
                 correctAnswersList.toArray(new String[0])
         );
     }
+    
+    public ExamData getExamByTestCodeAndExOrder(String testCode, String exOrder) throws SQLException {
+        db = new ConnectDatabase();
+        Connection conn = db.connectToDB();
+
+        String query = "SELECT ex_quesIDs FROM exams WHERE testCode = ? and exOrder = ?";
+        PreparedStatement pst = conn.prepareStatement(query);
+        pst.setString(1, testCode);
+        pst.setString(2, exOrder);
+        ResultSet rs = pst.executeQuery();
+
+        String questionsStr = null;
+        if (rs.next()) {
+            questionsStr = rs.getString("ex_quesIDs");
+        }
+
+        if (questionsStr == null || questionsStr.isEmpty()) {
+            return new ExamData(new String[]{},new String[]{}, new String[][]{}, new String[]{});
+        }
+
+        String[] listIDQues = questionsStr.split(",");
+
+        List<String> questionsList = new ArrayList<>();
+        List<String> questionsImages = new ArrayList<>();
+        List<String[]> optionsList = new ArrayList<>();
+        List<String> correctAnswersList = new ArrayList<>();
+
+        for (int i = 0; i < listIDQues.length; i++) {
+            int quesID = Integer.parseInt(listIDQues[i].trim());
+            QuestionData questionData = getQuestionWithAnswers(conn, quesID);
+            if (questionData != null) {
+                questionsList.add("Câu " + (i + 1) + ": " + questionData.quesText);
+                questionsImages.add(questionData.quesImage);
+                optionsList.add(questionData.answers);
+                correctAnswersList.add(questionData.correctAnswer);
+            }
+        }
+
+        rs.close();
+        pst.close();
+        db.closeConnect();
+
+        return new ExamData(
+                questionsList.toArray(new String[0]),
+                questionsImages.toArray(new String[0]),
+                optionsList.toArray(new String[0][]),
+                correctAnswersList.toArray(new String[0])
+        );
+    }
 
     private QuestionData getQuestionWithAnswers(Connection conn, int quesID) throws SQLException {
         String query = "SELECT * FROM questions WHERE qID = ?";
