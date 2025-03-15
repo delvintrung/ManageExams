@@ -5,6 +5,7 @@ import java.util.List;
 
 import app.DAL.Exam_DAL;
 import app.DTO.Exam_DTO;
+import app.Helper.ExamData;
 
 public class Exam_BLL {
 	public String[][] getAllExamForTable() throws SQLException {
@@ -28,5 +29,16 @@ public class Exam_BLL {
 		}
 		return result;
 		
+	}
+	
+	public ExamData getExambyTestCodeAndExOrder(String testCode, String ExOrder) {
+		Exam_DAL dal = new Exam_DAL();
+		try {
+			return dal.getExamByTestCodeAndExOrder(testCode, ExOrder);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

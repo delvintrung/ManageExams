@@ -18,7 +18,11 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.poi.xwpf.usermodel.XWPFAbstractNum;
+
+import app.BLL.Answer_BLL;
 import app.BLL.User_BLL;
+import app.DTO.Answer_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
 import app.GUI.Component.Dialog.AnswerCRUDDialog;
@@ -35,32 +39,31 @@ public class AnswerPanel  extends JPanel implements ActionListener {
 	
 	private AdminManageScreen main;
 	private User_DTO currentUser;
-	private ArrayList<User_DTO> users;
-	private User_BLL userBLL;
+	private ArrayList<Answer_DTO> ans;
+	private Answer_BLL ans_BLL;
 
 	public AnswerPanel(AdminManageScreen main, User_DTO admin) {
 		this.main = main;
 		this.currentUser = admin;
-		users = new ArrayList<User_DTO>();
-		userBLL = new User_BLL();
+		ans = new ArrayList<Answer_DTO>();
+		ans_BLL = new Answer_BLL();
 		
 		initComponents();
 		
-		users = userBLL.getUsers();
+		ans = ans_BLL.getAnswers();
 		
-		loadTableData(users);
+		loadTableData(ans);
 	}
 	
-	private void loadTableData(ArrayList<User_DTO> users) {
+	private void loadTableData(ArrayList<Answer_DTO> ans) {
 		tableModel.setRowCount(0); 
         
-        for (User_DTO user : users) {
+        for (Answer_DTO an : ans) {
             tableModel.addRow(new Object[]{
-                user.getUserID(),
-                user.getUserName(),
-                user.getUserEmail(),
-                user.getUserFullName(),
-                user.getIsAdmin() == 1 ? "Admin" : "User"
+            		an.getAwID(),
+            		an.getqID(),
+            		an.getAwContent(),
+            		an.getIsRight() == 1 ? "Đúng": "Sai" ,
             });
         }
 
@@ -129,7 +132,7 @@ public class AnswerPanel  extends JPanel implements ActionListener {
 		scrollPane.setBounds(0, 0, 718, 398);
 		panel_2.add(scrollPane);
 		
-		tableModel = new DefaultTableModel(new Object[]{"ID", "Tên đăng nhập", "Email", "Họ tên", "Role"}, 0) {
+		tableModel = new DefaultTableModel(new Object[]{"ID", "Đáp án của", "Nội dung", "Đúng/Sai"}, 0) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -145,7 +148,7 @@ public class AnswerPanel  extends JPanel implements ActionListener {
 	private int getSelectedRow() {
         int index = table.getSelectedRow();
         if (index == -1) {
-            JOptionPane.showMessageDialog(main, "Bạn chưa chọn user nào", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(main, "Bạn chưa chọn đáp án nào", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
         return index;
     }
@@ -155,44 +158,36 @@ public class AnswerPanel  extends JPanel implements ActionListener {
 		int index = getSelectedRow();
 		
         if (e.getSource() == btnCreate) {
-        	AnswerCRUDDialog answerDialog = new AnswerCRUDDialog(main, true, "Thêm user", this, "create", null);
+        	AnswerCRUDDialog answerDialog = new AnswerCRUDDialog(main, true, "Thêm đáp án", this, "create", null);
         	answerDialog.setVisible(true);
             
-            users = userBLL.getUsers();
-            loadTableData(users);
+            ans = ans_BLL.getAnswers();
+            loadTableData(ans);
         } else if (e.getSource() == btnDelete) {
             if (index != -1) {
-            	if (users.get(index).getIsAdmin() == 1) {
-            		JOptionPane.showMessageDialog(this, "Không thể xóa admin");
-            		return;
-            	}
             	
                 if (JOptionPane.showConfirmDialog(main, "Bạn có chắc muốn xóa user này không?", "", JOptionPane.YES_NO_OPTION) == 0) {
-                    userBLL.delete(users.get(index).getUserID());
+                    ans_BLL.delete(ans.get(index).getAwID());
                 }
                 
-                users = userBLL.getUsers();
-                loadTableData(users);
+                ans = ans_BLL.getAnswers();
+                loadTableData(ans);
             }
         } else {         
             if (index != -1) {
-            	if (users.get(index).getUserName().equals("admin")) {
-            		JOptionPane.showMessageDialog(this, "Không thể sửa thông tin admin gốc của hệ thống");
-            		return;
-            	}
             	
-            	AnswerCRUDDialog answerDialog = new AnswerCRUDDialog(main, true, "Sửa user", this, "update", users.get(index));
+            	AnswerCRUDDialog answerDialog = new AnswerCRUDDialog(main, true, "Sửa user", this, "update", ans.get(index));
             	answerDialog.setVisible(true);
             	
-            	users = userBLL.getUsers();
-                loadTableData(users);
+            	ans = ans_BLL.getAnswers();
+                loadTableData(ans);
             }
         }        
     }
 	
 	public void search() {
 		String search = txtSearch.getText();
-		ArrayList<User_DTO> searchList = userBLL.search(search);
+		ArrayList<Answer_DTO> searchList = ans_BLL.search(search);
 		loadTableData(searchList);
 	}
 }

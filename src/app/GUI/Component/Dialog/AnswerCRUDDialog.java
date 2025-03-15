@@ -17,43 +17,40 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import app.BLL.Answer_BLL;
 import app.BLL.User_BLL;
+import app.DTO.Answer_DTO;
 import app.DTO.User_DTO;
+import app.GUI.Component.AdminUI.AnswerPanel;
 import app.GUI.Component.AdminUI.UserPanel;
 
 public class AnswerCRUDDialog extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField txtEmail;
-	private JComboBox<String> cbxRole;
 	private JButton btnSave;
 	
-	private User_DTO currentUser;
-	private User_BLL userBLL;
-	private JTextField txtFullName;
-	private JPasswordField txtPassword;
+	private Answer_DTO currentAnswer;
+	private Answer_BLL ans_BLL;
+	private JTextField txtQues;
 	private JLabel lblTnngNhp;
-	private JTextField txtUsername;
+	private JComboBox cbbTrueFalse;
+	private JComboBox cbbSelectQuestion;
+	private JComboBox cbbStatus;
 
-	public AnswerCRUDDialog(Frame parent, boolean modal, String title, UserPanel userPanel, String mode,  User_DTO currentUser) {
+	public AnswerCRUDDialog(Frame parent, boolean modal, String title, AnswerPanel userPanel, String mode,  Answer_DTO currentAnswer) {
 		super(parent, modal);
 		
-		this.currentUser = currentUser;
-		userBLL = new User_BLL();
+		this.currentAnswer = currentAnswer;
+		ans_BLL = new Answer_BLL();
 		
 		setSize(700,600);
 		getContentPane().setBackground(Color.WHITE);
         getContentPane().setLayout(null);
         
-        JLabel lblTitle = new JLabel("Email:");
+        JLabel lblTitle = new JLabel("Đúng/Sai:");
         lblTitle.setFont(new Font("Verdana", Font.PLAIN, 12));
-        lblTitle.setBounds(87, 182, 74, 39);
+        lblTitle.setBounds(87, 182, 103, 39);
         getContentPane().add(lblTitle);
-        
-        txtEmail = new JTextField();
-        txtEmail.setBounds(200, 183, 404, 39);
-        getContentPane().add(txtEmail);
-        txtEmail.setColumns(10);
         
         btnSave = new JButton("Xác nhận");
         btnSave.addActionListener(new ActionListener() {
@@ -69,17 +66,6 @@ public class AnswerCRUDDialog extends JDialog {
         btnSave.setBounds(507, 409, 97, 33);
         getContentPane().add(btnSave);
         
-        JLabel lblRole = new JLabel("Role:");
-        lblRole.setFont(new Font("Verdana", Font.PLAIN, 12));
-        lblRole.setBounds(87, 340, 74, 36);
-        getContentPane().add(lblRole);
-        
-        cbxRole = new JComboBox<String>();
-        cbxRole.setModel(new DefaultComboBoxModel<String>(new String[] {"User", "Admin"}));
-        cbxRole.setFont(new Font("Verdana", Font.PLAIN, 12));
-        cbxRole.setBounds(200, 339, 404, 39);
-        getContentPane().add(cbxRole);
-        
         JButton btnCancel = new JButton("Hủy");
         btnCancel.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -90,87 +76,81 @@ public class AnswerCRUDDialog extends JDialog {
         btnCancel.setBounds(401, 409, 85, 33);
         getContentPane().add(btnCancel);
         
-        JLabel lblHTn = new JLabel("Họ tên:");
+        JLabel lblHTn = new JLabel("Nội dung");
         lblHTn.setFont(new Font("Verdana", Font.PLAIN, 12));
         lblHTn.setBounds(87, 110, 74, 39);
         getContentPane().add(lblHTn);
         
-        txtFullName = new JTextField();
-        txtFullName.setColumns(10);
-        txtFullName.setBounds(200, 111, 404, 39);
-        getContentPane().add(txtFullName);
+        txtQues = new JTextField();
+        txtQues.setColumns(10);
+        txtQues.setBounds(200, 111, 404, 39);
+        getContentPane().add(txtQues);
         
-        JLabel lblMtKhu = new JLabel("Mật khẩu:");
-        lblMtKhu.setFont(new Font("Verdana", Font.PLAIN, 12));
-        lblMtKhu.setBounds(87, 259, 74, 39);
-        getContentPane().add(lblMtKhu);
-        
-        txtPassword = new JPasswordField();
-        txtPassword.setBounds(200, 260, 404, 39);
-        getContentPane().add(txtPassword);
-        
-        lblTnngNhp = new JLabel("Tên đăng nhập:");
+        lblTnngNhp = new JLabel("Câu hỏi:");
         lblTnngNhp.setFont(new Font("Verdana", Font.PLAIN, 12));
         lblTnngNhp.setBounds(87, 41, 108, 39);
         getContentPane().add(lblTnngNhp);
         
-        txtUsername = new JTextField();
-        txtUsername.setColumns(10);
-        txtUsername.setBounds(200, 41, 404, 39);
-        getContentPane().add(txtUsername);
+        cbbTrueFalse = new JComboBox();
+        cbbTrueFalse.setModel(new DefaultComboBoxModel(new String[] {"Đúng", "Sai"}));
+        cbbTrueFalse.setSelectedIndex(1);
+        cbbTrueFalse.setFont(new Font("Verdana", Font.PLAIN, 10));
+        cbbTrueFalse.setBounds(199, 182, 204, 31);
+        getContentPane().add(cbbTrueFalse);
+        
+        cbbSelectQuestion = new JComboBox();
+        cbbSelectQuestion.setFont(new Font("Verdana", Font.PLAIN, 10));
+        cbbSelectQuestion.setBounds(200, 49, 404, 31);
+        getContentPane().add(cbbSelectQuestion);
+        
+        JLabel lblTrngThi = new JLabel("Trạng thái:");
+        lblTrngThi.setFont(new Font("Verdana", Font.PLAIN, 12));
+        lblTrngThi.setBounds(87, 255, 103, 39);
+        getContentPane().add(lblTrngThi);
+        
+        cbbStatus = new JComboBox();
+        cbbStatus.setModel(new DefaultComboBoxModel(new String[] {"Ẩn", "Hiện"}));
+        cbbStatus.setSelectedIndex(1);
+        cbbStatus.setFont(new Font("Verdana", Font.PLAIN, 10));
+        cbbStatus.setBounds(199, 263, 204, 31);
+        getContentPane().add(cbbStatus);
         this.setTitle(title);
         
         this.setLocationRelativeTo(null);
         
-        if ("update".equals(mode) && currentUser != null) {
-        	txtUsername.setText(currentUser.getUserName());
-        	txtUsername.setEnabled(false);
-            txtEmail.setText(currentUser.getUserEmail());
-            txtFullName.setText(currentUser.getUserFullName());
-            txtPassword.setText(currentUser.getUserPassword());
-            cbxRole.setSelectedIndex(currentUser.getIsAdmin());
+        if ("update".equals(mode) && currentAnswer != null) {
+        	txtQues.setText(currentAnswer.getAwContent());
+//            cbbSelectQuestion.setSelectedIndex(currentAnswer.getqID());
+        	cbbSelectQuestion.setEditable(false);
+            cbbTrueFalse.setSelectedIndex(currentAnswer.getIsRight() == 1 ? 1 : 0);
+            cbbStatus.setSelectedIndex(currentAnswer.getAwStatus() == 1? 0 : 1);
         }
 	}
 
 	public void create() {
 	    try {
-	    	String username = txtUsername.getText().trim();
-	        String email = txtEmail.getText().trim();
-	        String fullname = txtFullName.getText().trim();
-	        String password = txtPassword.getText();
-	        int isAdmin = cbxRole.getSelectedIndex();
+	    	String txtQuestion = txtQues.getText().trim();
+//	    	int idQues = cbbSelectQuestion.getSelectedItem();
+	    	int isTrue = cbbTrueFalse.getSelectedIndex();
 	        
-	        if (username.isEmpty()) {
-	            showMessage("Tên đăng nhập không được để trống.");
-	            return;
-	        } 
-	        if (fullname.isEmpty()) {
-	            showMessage("Họ tên không được để trống.");
-	            return;
-	        }
-	        if (email.isEmpty()) {
-	            showMessage("Email không được để trống.");
-	            return;
-	        }
-	        if (password.isEmpty()) {
-	            showMessage("Mật khẩu không được để trống.");
+	        if (txtQuestion.isEmpty()) {
+	            showMessage("Nội dung câu hỏi không được để trống.");
 	            return;
 	        }
 
-	        User_DTO newUser = new User_DTO();
-	        newUser.setUserName(username);
-	        newUser.setUserEmail(email);
-	        newUser.setUserFullName(fullname);
-	        newUser.setUserPassword(password);
-	        newUser.setIsAdmin(isAdmin);
+	        Answer_DTO newAns = new Answer_DTO();
+	        newAns.setAwContent(txtQuestion);
+	        newAns.setAwPictures("");
+	        newAns.setIsRight(isTrue);
+//	        newAns.setqID(password);
 
-	        boolean isCreated = userBLL.create(newUser);
+	        boolean isCreated = ans_BLL.create(newAns);
 	        if (isCreated) {
-	            showMessage("Thêm user thành công!");
+	            showMessage("Thêm đáp án thành công!");
 //	            topicPanel.reloadTopics();
 	            dispose();
 	        } else {
-	            showMessage("Thêm user thất bại.");
+	            showMessage("Thêm đáp án thất bại.");
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -180,43 +160,30 @@ public class AnswerCRUDDialog extends JDialog {
 
 	public void update() {
 	    try {
-	        if (currentUser == null) {
-	            showMessage("Không tìm thấy user cần cập nhật.");
+	        if (currentAnswer == null) {
+	            showMessage("Không tìm thấy câu hỏi cần cập nhật.");
 	            return;
 	        }
 
-	        String email = txtEmail.getText().trim();
-	        String fullname = txtFullName.getText().trim();
-	        String password = txtPassword.getText();
-	        int isAdmin = cbxRole.getSelectedIndex();
+	        String txtQuestion = txtQues.getText().trim();
+	        int isTrue = cbbTrueFalse.getSelectedIndex();
 	        
-	        if (fullname.isEmpty()) {
-	            showMessage("Họ tên không được để trống.");
-	            return;
-	        }
-	        if (email.isEmpty()) {
-	            showMessage("Email không được để trống.");
-	            return;
-	        }
-	        if (password.isEmpty()) {
-	            showMessage("Mật khẩu không được để trống.");
+	        if (txtQuestion.isEmpty()) {
+	            showMessage("Nội dung đáp án không được để trống.");
 	            return;
 	        }
 	        
-	        User_DTO updatedUser = new User_DTO();
-	        updatedUser.setUserName(password);
-	        updatedUser.setUserEmail(email);
-	        updatedUser.setUserFullName(fullname);
-	        updatedUser.setUserPassword(password);
-	        updatedUser.setIsAdmin(isAdmin);
+	        Answer_DTO updatedAnswer = new Answer_DTO();
+	        updatedAnswer.setAwContent(txtQuestion);
+	        updatedAnswer.setIsRight(isTrue);
 
-	        boolean isUpdated = userBLL.update(currentUser, updatedUser);
+	        boolean isUpdated = ans_BLL.update(updatedAnswer);
 	        if (isUpdated) {
-	            showMessage("Cập nhật user thành công!");
+	            showMessage("Cập nhật đáp án thành công!");
 //	            topicPanel.reloadTopics();
 	            dispose();
 	        } else {
-	            showMessage("Cập nhật user thất bại.");
+	            showMessage("Cập nhật đáp án thất bại.");
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
+import app.BLL.Exam_BLL;
 import app.BLL.Question_BLL;
 import app.BLL.Test_BLL;
 import app.BLL.Topic_BLL;
@@ -17,7 +18,9 @@ import app.DTO.Topic_DTO;
 import app.DTO.User_DTO;
 import app.GUI.AdminManageScreen;
 import app.GUI.Component.Dialog.SelectExamToExport;
+import app.Helper.ExamData;
 import app.Helper.Validator;
+import app.Helper.WritingDocument;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -58,6 +61,7 @@ public class CreateExamsPanel extends JPanel {
 	Question_DAL qDAL = new Question_DAL();
 	Test_BLL tBLL = new Test_BLL();
 	Question_BLL qBll = new Question_BLL();
+	Exam_BLL eBll = new Exam_BLL();
 	int space =0;
 	private List<JCheckBox> checkBoxList = new ArrayList<>();
 	private JTextField txtTestCode;
@@ -212,12 +216,10 @@ public class CreateExamsPanel extends JPanel {
 				int column = 1;
 				int row = table.getSelectedRow();
 				String value = table.getModel().getValueAt(row, column).toString();
-				SelectExamToExport dialog = new SelectExamToExport(panel);
+				System.out.println(value);
+				SelectExamToExport dialog = new SelectExamToExport(panel, value);
 	            dialog.setVisible(true);
-	            String selectedCode = dialog.getSelectedExamCode();
-	            if (selectedCode != null) {
-	                System.out.println("Mã đề đã chọn: " + selectedCode);
-	            }
+	            
 			}
 		});
 		

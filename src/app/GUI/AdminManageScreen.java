@@ -57,7 +57,7 @@ public class AdminManageScreen extends JFrame {
 	    Content.add(questionsPanel, "questions");
 	    Content.add(dashboardPanel, "dashboard");
 	    Content.add(createExamsPanel,"exams");
-	    Content.add(answerPanel, "answers");
+	    Content.add(answerPanel, "answer");
 	    Content.add(userPanel, "users");
 	    getContentPane().add(Content);
 	    
