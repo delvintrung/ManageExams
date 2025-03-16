@@ -17,6 +17,8 @@ import java.util.Random;
 import javax.swing.JDialog;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.apache.commons.math3.analysis.polynomials.PolynomialFunctionNewtonForm;
+
 import app.BLL.Answer_BLL;
 import app.BLL.Question_BLL;
 import app.BLL.Topic_BLL;
@@ -100,7 +102,11 @@ public class AddEitQuestionDialog extends JDialog {
         answerPanel.setVisible(false);
         btnAccept.addActionListener( new ActionListener() { 
         	  public void actionPerformed(ActionEvent e) { 
-        		  openPanelAddAnswer();
+        		  if(!mode.equals("edit"))
+        		  {
+        			  openPanelAddAnswer();  
+        		  }
+        		  
         		  } 
         		} );
         
@@ -425,10 +431,39 @@ public class AddEitQuestionDialog extends JDialog {
             cbbLevel.setSelectedItem(this.qEdit.getqLevel());
             cbbTopic.setSelectedItem(this.qEdit.getqTopicID());
             txtLink.setText(this.qEdit.getqPicture());
-//            cbbStatus.setSelectedItem(qEdit.getqStatus());
-            txtQues.setEnabled(false);
+            cbbStatus = new JComboBox();
+            cbbStatus.addItem(1);
+            cbbStatus.addItem(0);
+            JLabel lblNewLabel_1_1_1 = new JLabel("Trạng thái");
+            lblNewLabel_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 12));
+            lblNewLabel_1_1_1.setBounds(87, 290, 74, 27);
+            getContentPane().add(lblNewLabel_1_1_1);
+            cbbStatus.setSelectedItem(qEdit.getqStatus());
+            cbbStatus.setFont(new Font("Verdana", Font.PLAIN, 12));
+            cbbStatus.setBounds(200, 284, 275, 33);
+            getContentPane().add(cbbStatus);
+            
             cbbTopic.setEnabled(false);
+            btnAdd.setVisible(false);
             btnAccept.setText("Lưu thông tin");
+            btnAccept.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					Question_DTO newEditValue = new Question_DTO();
+					newEditValue.setqContent(txtQues.getText());
+					newEditValue.setqLevel((String) cbbLevel.getSelectedItem());
+					newEditValue.setqPicture(txtLink.getText());
+					ComboItem selectedItem = (ComboItem) cbbTopic.getSelectedItem();
+					newEditValue.setqTopicID((int) selectedItem.getKey());
+					newEditValue.setqStatus((int) cbbStatus.getSelectedItem());
+					newEditValue.setqID(qEdit.getqID());
+					qBll.edit(newEditValue);
+					dispose();
+					return;
+				}
+			});
         }
     }
 	public void createPanelAnswerTextItem(JPanel parent, int qty) {

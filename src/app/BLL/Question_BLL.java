@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.compress.harmony.unpack200.bytecode.forms.ThisFieldRefForm;
+
 import app.DAL.Answer_DAL;
 import app.DAL.Question_DAL;
 import app.DTO.Answer_DTO;
@@ -32,7 +34,7 @@ public class Question_BLL {
 	}
 	
 	public int getIndexById(int id) {
-        for(int i=0; i<this.questionList.size(); i++) {
+        for(int i=0; i<=this.questionList.size(); i++) {
             if(this.questionList.get(i).getqID() == id)
                 return i;
         }
@@ -109,7 +111,8 @@ public class Question_BLL {
 	
 	public boolean edit(Question_DTO q) {
 		if (q_DAL.update(q) != 0) {
-        	questionList.set(getIndexById(q.getqID()), q);
+			getAllQuestion();
+//        	questionList.set(getIndexById(q.getqID()), q);
             return true;
         }
         return false;

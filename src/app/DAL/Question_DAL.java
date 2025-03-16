@@ -122,13 +122,14 @@ public class Question_DAL {
         try {
         	ConnectDatabase db = new ConnectDatabase();
             Connection conn = (Connection) db.connectToDB();
-            String query = "UPDATE `questions` SET `qContent`=?,`qPictures`=?,`qTopicID`=?,`qLevel`=?,`qStatus`=?";
+            String query = "UPDATE `questions` SET `qContent`=?,`qPictures`=?,`qTopicID`=?,`qLevel`=?,`qStatus`=? where qID = ?";
             PreparedStatement pst = (PreparedStatement) conn.prepareStatement(query);
             pst.setString(1, q.getqContent());
             pst.setString(2, q.getqPicture());
             pst.setFloat(3, q.getqTopicID());
             pst.setString(4, q.getqLevel());
             pst.setInt(5, q.getqStatus());
+            pst.setInt(6, q.getqID());
             result = pst.executeUpdate();
             db.closeConnect();
         } catch (SQLException ex) {
