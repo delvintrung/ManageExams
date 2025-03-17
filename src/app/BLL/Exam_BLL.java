@@ -1,6 +1,7 @@
 package app.BLL;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import app.DAL.Exam_DAL;
@@ -40,5 +41,16 @@ public class Exam_BLL {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public ArrayList<String> getExcode(String testCode) {
+			Exam_DAL dal = new Exam_DAL();
+			try {
+				return dal.getExcode(testCode);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
 	}
 }

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -36,8 +37,9 @@ public class SelectExamToExport extends JDialog {
         label.setHorizontalAlignment(SwingConstants.CENTER);
         add(label, BorderLayout.NORTH);
 
-        
-        String[] examCodes = {"A", "B", "C", "D"};
+        ArrayList<String> examExcodes = eBll.getExcode(testCode);
+        System.out.println(examExcodes.size());
+        String[] examCodes = examExcodes.toArray(new String[0]);
         comboBox = new JComboBox<>(examCodes);
         add(comboBox, BorderLayout.CENTER);
 

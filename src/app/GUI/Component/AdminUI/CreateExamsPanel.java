@@ -216,7 +216,6 @@ public class CreateExamsPanel extends JPanel {
 				int column = 1;
 				int row = table.getSelectedRow();
 				String value = table.getModel().getValueAt(row, column).toString();
-				System.out.println(value);
 				SelectExamToExport dialog = new SelectExamToExport(panel, value);
 	            dialog.setVisible(true);
 	            

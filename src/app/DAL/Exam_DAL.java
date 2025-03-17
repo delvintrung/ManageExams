@@ -201,6 +201,24 @@ public class Exam_DAL {
         return correctAnswer;
     }
     
+    public ArrayList<String> getExcode(String testCode) throws SQLException {
+    	System.out.println(testCode);
+    	ArrayList<String> result = new ArrayList<String>();
+    	db = new ConnectDatabase();
+        Connection conn = db.connectToDB();
+        String query = "select exOrder from exams where testCode = ? ";
+        PreparedStatement pst = conn.prepareStatement(query);
+        pst.setString(1, testCode);
+        ResultSet rs = pst.executeQuery();
+        while (rs.next()) {
+        	result.add(rs.getString("exOrder"));
+        }
+        System.out.println(result.size());
+        rs.close();
+        pst.close();
+        return result;
+    }
+    
     public int insertExam(Exam_DTO newExam) throws SQLException {
     	db = new ConnectDatabase();
         Connection conn = db.connectToDB();
